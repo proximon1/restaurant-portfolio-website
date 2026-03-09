@@ -184,13 +184,13 @@ section {
 
 .shape-1 {
   top: 58%;
-  left: 73%;
+  left: 80%;
   width: clamp(120px, 8vw, 210px);
 }
 
 .shape-2 {
   top: 30%;
-  left: 10%;
+  left: 5%;
   width: clamp(140px, 10vw, 250px);
 }
 
@@ -381,6 +381,7 @@ footer img {
 
 .mouse-image {
   width: 15vw;
+  max-width: 20vh;
 }
 
 .showcase-carousel {
@@ -631,6 +632,10 @@ footer img {
       rgba(0, 0, 0, 0.8) 90%,
       rgba(0, 0, 0, 0) 100%
     );
+  }
+
+  .mouse-image {
+    left: 10%;
   }
 }
 
