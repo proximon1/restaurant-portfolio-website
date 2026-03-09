@@ -227,7 +227,7 @@ section {
 }
 
 .about-title {
-  font-size: 43px;
+  font-size: clamp(29px, 5vw , 43px);
   font-weight: 700;
   letter-spacing: 0.03em;
 }
@@ -241,7 +241,7 @@ section {
 .about-picture-right {
   min-height: 600px;
   height: 100%;
-  background: url("/images/about_picture_right.png") center / cover no-repeat;
+  background: url("/images/about_picture_right.png") 25% center / cover no-repeat;
 }
 
 .about-gif-right {
@@ -380,7 +380,7 @@ footer img {
 }
 
 .mouse-image {
-  width: 15%;
+  width: 15vw;
 }
 
 .showcase-carousel {
@@ -462,7 +462,7 @@ footer img {
   font-size: clamp(20px, 1.8vw, 24px);
   letter-spacing: 0.03em;
   color: var(--color-beige);
-  
+
   z-index: var(--z-content);
 
   opacity: 0;
@@ -591,7 +591,7 @@ footer img {
   }
 
   .hero-half-label {
-    font-size: 48px; /* mobil */
+    font-size: 48px;
   }
 
   .eat-word img {
@@ -631,15 +631,6 @@ footer img {
       rgba(0, 0, 0, 0.8) 90%,
       rgba(0, 0, 0, 0) 100%
     );
-  }
-
-  .about-title {
-    font-size: 29px;
-  }
-
-  .mouse-image {
-    left: 5%;
-    width: 20vw;
   }
 }
 

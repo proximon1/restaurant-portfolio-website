@@ -23,7 +23,7 @@ try {
     db.connect();
     console.log(`The database is running on https://localhost:${db.port}`);
 } catch (error) {
-    console.log("Something went wrong!", error.stack);
+    console.log("Can't connect to DB", error.stack);
 }
 
 app.listen(port, () => {
