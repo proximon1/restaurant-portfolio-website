@@ -10,6 +10,9 @@
   --z-header: 100;
   --z-overlay: 200;
   --z-modal: 300;
+
+  --services-title-size: clamp(50px, 5vw, 143px);
+  --logo-size: clamp(200px, 40vw, 450px);
 }
 
 /* FONTS */
@@ -50,7 +53,12 @@ section {
 #services,
 #projects,
 #contact {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 120px;
+}
+
+#projects {
+  scroll-snap-align: none;
+  overscroll-behavior: contain;
 }
 
 .showcase-carousel::-webkit-scrollbar {
@@ -136,9 +144,8 @@ section {
 }
 
 .hero-center-logo img {
-  max-width: 450px;
+  width: var(--logo-size);
   max-height: 600px;
-  width: 40vw;
   transition: width 0.35s ease;
 }
 
@@ -183,14 +190,14 @@ section {
 }
 
 .shape-1 {
-  top: 58%;
+  top: 55%;
   left: 80%;
   width: clamp(120px, 8vw, 210px);
 }
 
 .shape-2 {
   top: 30%;
-  left: 5%;
+  left: 0%;
   width: clamp(140px, 10vw, 250px);
 }
 
@@ -301,8 +308,8 @@ section {
 
 .modal-close {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 40px;
+  right: 40px;
   border: none;
   background: none;
   font-size: 20px;
@@ -311,7 +318,7 @@ section {
 }
 
 .modal-close img {
-  width: clamp(40px, 8vw, 80px);
+  width: clamp(40px, 8vw, 60px);
 }
 
 .modal-title {
@@ -344,9 +351,16 @@ section {
 
 .services-title {
   font-weight: 800;
-  font-size: clamp(48px, 8vw, 143px);
+  font-size: var(--services-title-size);
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  line-height: 0.9;
+}
+
+.service-label {
+  font-size: clamp(25px, calc(var(--services-title-size)*0.25), 30px);
+  font-weight: 700;
+  line-height: 0.9;
 }
 
 .projects-title {
@@ -364,19 +378,14 @@ footer a {
 }
 
 .footer-logo {
-  width: 75%;
-  max-width: 450px;
-}
-
-footer img {
-  max-width: 450px;
+  width: var(--logo-size);
   max-height: 600px;
-  width: 40vw;
 }
 
 .ciao-image {
   position: absolute;
-  top: calc(60% + 60px);
+  top: calc(70% + 60px);
+  max-width: 450px;
 }
 
 .mouse-image {
@@ -460,7 +469,7 @@ footer img {
 
   text-transform: uppercase;
   font-weight: 800;
-  font-size: clamp(20px, 1.8vw, 24px);
+  font-size: clamp(16px, 2vh, 24px);
   letter-spacing: 0.03em;
   color: var(--color-beige);
 
@@ -529,11 +538,46 @@ footer img {
 }
 
 .background-linear-gradient {
+  position: relative;
   background-image: linear-gradient(
     to bottom,
     rgba(245, 246, 241, 1),
     rgba(182, 35, 54, 1)
   );
+  overflow: hidden;
+}
+
+.background-linear-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: url("/images/noise.svg");
+  background-size: 180px;
+
+  opacity: 0.5;
+  pointer-events: none;
+
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.background-linear-gradient > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ANIMATIONS */

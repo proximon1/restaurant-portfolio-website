@@ -18,18 +18,28 @@ const container = document.querySelector(".showcase-carousel");
 
 if (window.matchMedia("(pointer: fine)").matches) {
 
-  let targetScroll = 0;
-  let currentScroll = 0;
+  let targetScroll = container.scrollLeft;
+  let currentScroll = container.scrollLeft;
 
   container.addEventListener("wheel", (e) => {
 
-    const atStart = container.scrollLeft <= 0;
-    const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth;
+    const threshold = 2;
+
+    const atStart = currentScroll <= threshold;
+    const atEnd =
+      currentScroll + container.clientWidth >=
+      container.scrollWidth - threshold;
 
     if ((e.deltaY < 0 && !atStart) || (e.deltaY > 0 && !atEnd)) {
 
       e.preventDefault();
+
       targetScroll += e.deltaY * 1.5;
+
+      targetScroll = Math.max(
+        0,
+        Math.min(targetScroll, container.scrollWidth - container.clientWidth)
+      );
 
     }
 
@@ -37,7 +47,8 @@ if (window.matchMedia("(pointer: fine)").matches) {
 
   function animate() {
 
-    currentScroll += (targetScroll - currentScroll) * 0.03;
+    currentScroll += (targetScroll - currentScroll) * 0.04;
+
     container.scrollLeft = currentScroll;
 
     requestAnimationFrame(animate);
