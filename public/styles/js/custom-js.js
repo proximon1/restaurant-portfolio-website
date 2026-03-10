@@ -12,51 +12,53 @@ document.querySelectorAll('#mainNav a, .navbar-brand').forEach(a=>{
   });
 });
 
+/* Horizontális görgetés */
 
-/* Showcase görgetés */ 
-const container = document.querySelector(".showcase-carousel");
+/* Showcase smooth drag scroll */
 
-if (window.matchMedia("(pointer: fine)").matches) {
+document.addEventListener("DOMContentLoaded", () => {
+
+  const container = document.querySelector(".showcase-carousel");
+  if (!container) return;
+
+  /* ha touch device → hagyjuk a natív swipe-ot */
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+
+  let isDown = false;
+  let startX;
+  let scrollStart;
 
   let targetScroll = container.scrollLeft;
   let currentScroll = container.scrollLeft;
 
-  container.addEventListener("wheel", (e) => {
+  container.addEventListener("mousedown", (e) => {
+    isDown = true;
+    startX = e.pageX;
+    scrollStart = targetScroll;
+    container.classList.add("dragging");
+  });
 
-    const threshold = 2;
+  document.addEventListener("mouseup", () => {
+    isDown = false;
+    container.classList.remove("dragging");
+  });
 
-    const atStart = currentScroll <= threshold;
-    const atEnd =
-      currentScroll + container.clientWidth >=
-      container.scrollWidth - threshold;
+  document.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
 
-    if ((e.deltaY < 0 && !atStart) || (e.deltaY > 0 && !atEnd)) {
-
-      e.preventDefault();
-
-      targetScroll += e.deltaY * 1.5;
-
-      targetScroll = Math.max(
-        0,
-        Math.min(targetScroll, container.scrollWidth - container.clientWidth)
-      );
-
-    }
-
-  }, { passive: false });
+    const dx = e.pageX - startX;
+    targetScroll = scrollStart - dx;
+  });
 
   function animate() {
-
-    currentScroll += (targetScroll - currentScroll) * 0.04;
-
+    currentScroll += (targetScroll - currentScroll) * 0.12;
     container.scrollLeft = currentScroll;
-
     requestAnimationFrame(animate);
-
   }
 
   animate();
-}
+
+});
 
 /* navbar menü színek */
 const navBar = document.getElementById("navBar");

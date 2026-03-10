@@ -11,7 +11,7 @@
   --z-overlay: 200;
   --z-modal: 300;
 
-  --services-title-size: clamp(50px, 5vw, 143px);
+  --services-title-size: clamp(50px, 7vw, 143px);
   --logo-size: clamp(200px, 40vw, 450px);
 }
 
@@ -39,45 +39,61 @@
 
 /* BASE */
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 html {
-  scroll-snap-type: y mandatory;
+  scroll-padding-top: 100px;
+}
+
+main {
+  scroll-snap-type: y proximity;
 }
 
 section {
   overflow-x: hidden;
   min-height: 100dvh;
   scroll-snap-align: start;
+  margin-top: -1px;
 }
 
-#about,
-#services,
-#projects,
-#contact {
-  scroll-margin-top: 120px;
+footer {
+  scroll-snap-align: none;
 }
 
 #projects {
   scroll-snap-align: none;
-  overscroll-behavior: contain;
+  overscroll-behavior-x: contain;
 }
 
 .showcase-carousel::-webkit-scrollbar {
   display: none;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
 /* LAYOUT */
 
-.hero {
-  position: relative;
-  min-height: 100vh;
+.welcome {
   background: url("/images/main.gif") center/cover no-repeat;
 }
 
+.hero {
+  position: relative;
+  min-height: calc(100dvh - 90px);
+}
+
 .navbar-overlay {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: var(--z-header);
-  margin-bottom: -90px;
   background: transparent;
 }
 
@@ -155,6 +171,8 @@ section {
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  scroll-snap-align: center;
 }
 
 .hero-half-label {
@@ -190,13 +208,13 @@ section {
 }
 
 .shape-1 {
-  top: 55%;
-  left: 80%;
+  top: 25%;
+  left: 85%;
   width: clamp(120px, 8vw, 210px);
 }
 
 .shape-2 {
-  top: 30%;
+  top: 55%;
   left: 0%;
   width: clamp(140px, 10vw, 250px);
 }
@@ -228,13 +246,13 @@ section {
 }
 
 .about-label {
-  font-size: clamp(20px, 3vw, 30px);
+  font-size: clamp(20px, 3vw, 23px);
   font-weight: 700;
-  line-height: 38px;
+  line-height: 30px;
 }
 
 .about-title {
-  font-size: clamp(29px, 5vw , 43px);
+  font-size: clamp(29px, 5vw , 38px);
   font-weight: 700;
   letter-spacing: 0.03em;
 }
@@ -354,13 +372,13 @@ section {
   font-size: var(--services-title-size);
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  line-height: 0.9;
+  line-height: 1;
 }
 
 .service-label {
-  font-size: clamp(25px, calc(var(--services-title-size)*0.25), 30px);
+  font-size: clamp(25px, calc(var(--services-title-size)*0.20), 30px);
   font-weight: 700;
-  line-height: 0.9;
+  line-height: 1.2;
 }
 
 .projects-title {
@@ -541,8 +559,9 @@ footer a {
   position: relative;
   background-image: linear-gradient(
     to bottom,
-    rgba(245, 246, 241, 1),
-    rgba(182, 35, 54, 1)
+    rgba(245, 246, 241, 1) 0%,
+    rgba(245, 246, 241, 1) 30%,
+    rgba(182, 35, 54, 1) 100%
   );
   overflow: hidden;
 }
@@ -555,13 +574,13 @@ footer a {
   background-image: url("/images/noise.svg");
   background-size: 180px;
 
-  opacity: 0.5;
+  opacity: 0.3;
   pointer-events: none;
 
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
-    black 10%,
+    black 20%,
     black 90%,
     transparent 100%
   );
@@ -569,7 +588,7 @@ footer a {
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0%,
-    black 10%,
+    black 20%,
     black 90%,
     transparent 100%
   );
@@ -603,6 +622,15 @@ footer a {
 
 .gallery-item:hover .grain-effect {
   opacity: 0.5;
+}
+
+.showcase-carousel {
+  cursor: grab;
+}
+
+.showcase-carousel.dragging {
+  cursor: grabbing;
+  user-select: none;
 }
 
 /* MEDIA QUERIES */
