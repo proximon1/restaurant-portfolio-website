@@ -405,7 +405,7 @@ footer a {
 
 .ciao-image {
   position: absolute;
-  top: calc(70% + 60px);
+  top: calc(60% + 60px);
   max-width: 450px;
 }
 
@@ -628,7 +628,9 @@ footer a {
 }
 
 .showcase-carousel {
+  overflow-x: auto;
   cursor: grab;
+  -webkit-overflow-scrolling: touch;
 }
 
 .showcase-carousel.dragging {
