@@ -212,14 +212,14 @@ img {
 }
 
 .shape-1 {
-  top: 30%;
+  top: 25%;
   left: 85%;
   width: clamp(60px, 8vw, 210px);
 }
 
 .shape-2 {
-  top: 57%;
-  left: 10%;
+  top: 47%;
+  left: 18%;
   width: clamp(70px, 10vw, 250px);
 }
 
@@ -417,7 +417,8 @@ footer a {
 .showcase-carousel {
   overflow-x: auto;
   overflow-y: hidden;
-  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 .showcase-track {
@@ -436,6 +437,7 @@ footer a {
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 8px;
+  flex: 0 0 auto;
   aspect-ratio: 9 / 4.5;
   max-height: 70vh;
 }
@@ -625,12 +627,6 @@ footer a {
 
 .gallery-item:hover .grain-effect {
   opacity: 0.5;
-}
-
-.showcase-carousel {
-  overflow-x: auto;
-  cursor: grab;
-  -webkit-overflow-scrolling: touch;
 }
 
 .showcase-carousel.dragging {
