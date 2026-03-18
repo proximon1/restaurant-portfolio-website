@@ -52,23 +52,14 @@ html {
   scroll-padding-top: 100px;
 }
 
-main {
-  scroll-snap-type: y proximity;
-}
-
 section {
   overflow-x: hidden;
-  min-height: 100dvh;
-  scroll-snap-align: start;
+
+  min-height: 100svh;
   margin-top: -1px;
 }
 
-footer {
-  scroll-snap-align: none;
-}
-
 #projects {
-  scroll-snap-align: none;
   overscroll-behavior-x: contain;
 }
 
@@ -124,6 +115,7 @@ img {
 
 .services {
   position: relative;
+  scroll-padding-top: 20px;
 }
 
 /* COMPONENTS */
@@ -175,8 +167,6 @@ img {
   align-items: center;
   justify-content: center;
   text-align: center;
-
-  scroll-snap-align: center;
 }
 
 .hero-half-label {
@@ -196,57 +186,30 @@ img {
   inset: 60% auto auto 75%;
   transform: translate(-50%, -50%);
   z-index: var(--z-decor);
+  max-width: none;
   width: 140%;
   pointer-events: none;
 }
 
-.services-decor {
-  position: absolute;
+.service-decor {
+  position: relative;
   inset: 0;
   pointer-events: none;
   z-index: var(--z-base);
 }
 
-.services-decor img {
-  position: absolute;
-}
-
 .shape-1 {
-  top: 25%;
-  left: 85%;
+  position: absolute;
+  top: 20%;
+  left: 110%;
   width: clamp(60px, 8vw, 210px);
 }
 
 .shape-2 {
-  top: 47%;
-  left: 18%;
+  position: absolute;
+  top: -20%;
+  left: -70%;
   width: clamp(70px, 10vw, 250px);
-}
-
-.shapes {
-  position: relative;
-  display: inline-block;
-  z-index: var(--z-base);
-}
-
-.shapes img {
-  position: absolute;
-  transform: translate(20%, -40%);
-  z-index: var(--z-decor);
-  width: clamp(120px, 20vw, 210px);
-}
-
-.triangle {
-  position: relative;
-  display: inline-block;
-  z-index: var(--z-base);
-}
-
-.triangle img {
-  position: absolute;
-  z-index: var(--z-decor);
-  transform: translate(-130%, -85%);
-  width: clamp(140px, 22vw, 250px);
 }
 
 .about-label {
@@ -393,7 +356,7 @@ img {
 footer a {
   color: var(--color-beige);
   font-weight: 700;
-  font-size: 30px;
+  font-size: clamp(18px, 5vw, 30px);
   letter-spacing: 0.03em;
   text-decoration: none;
 }
@@ -410,15 +373,23 @@ footer a {
 }
 
 .mouse-image {
-  width: 15vw;
-  max-width: 20vh;
+  width: clamp(90px, 15vw, 180px);
+}
+
+.mouse-black-image {
+  inset: -120% auto auto -10%;
+  max-width: none;
+  width: 120px;
+
+  transition: transform 0.2s linear;
+  will-change: transform;
 }
 
 .showcase-carousel {
   overflow-x: auto;
   overflow-y: hidden;
+  cursor: grab;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
 }
 
 .showcase-track {
@@ -437,6 +408,7 @@ footer a {
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 8px;
+  padding-left: 0.5em;
   flex: 0 0 auto;
   aspect-ratio: 9 / 4.5;
   max-height: 70vh;
@@ -487,12 +459,12 @@ footer a {
   display: flex;
   align-items: flex-end;
 
-  padding: 16px;
+  padding: 8px;
   overflow-wrap: anywhere;
 
   text-transform: uppercase;
   font-weight: 800;
-  font-size: clamp(16px, 2vh, 24px);
+  font-size: clamp(12px, 4vw, 16px);
   letter-spacing: 0.03em;
   color: var(--color-beige);
 
@@ -669,7 +641,8 @@ footer a {
   }
 
   .eat-word img {
-    inset: 60% auto auto 50%;
+    inset: 60% auto auto 70%;
+    width: 160%;
   }
 
   .navbar-overlay:has(.navbar-collapse:is(.show, .collapsing)) {
@@ -709,6 +682,12 @@ footer a {
 
   .mouse-image {
     left: 5%;
+  }
+
+  .mouse-black-image {
+    inset: -140% auto auto -10%;
+    max-width: none;
+    width: 80px;
   }
 }
 

@@ -1,115 +1,156 @@
-const mainNav = document.getElementById('mainNav');
-
 /* Navbar collapse */
+function initNavbarCollapse() {
+  const mainNav = document.getElementById('mainNav');
 
-document.querySelectorAll('#mainNav a, .navbar-brand').forEach(a=>{
-  a.addEventListener('click', ()=>{
-    requestAnimationFrame(()=>{
-      bootstrap.Collapse
-        .getOrCreateInstance(mainNav)
-        .hide();
+  document.querySelectorAll('#mainNav a, .navbar-brand').forEach(link => {
+    link.addEventListener('click', () => {
+      requestAnimationFrame(() => {
+        bootstrap.Collapse
+          .getOrCreateInstance(mainNav)
+          .hide();
+      });
     });
   });
-});
+}
 
-/* Galéria mozgatás kézzel */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const container = document.querySelector(".showcase-carousel");
-  if (!container) return;
+/* Gallery drag and move */
+function initGalleryDrag() {
+  const slider = document.querySelector('.showcase-carousel');
+  if (!slider) return;
 
   let isDown = false;
   let startX;
-  let scrollStart;
+  let scrollLeft;
 
-  container.addEventListener("mousedown", (e) => {
+  let velocity = 0;
+  let lastX;
+  let raf;
+
+  function startDrag(e) {
     isDown = true;
-    startX = e.pageX;
-    scrollStart = container.scrollLeft;
-    container.classList.add("dragging");
-  });
+    slider.classList.add('dragging');
 
-  document.addEventListener("mouseup", () => {
-    isDown = false;
-    container.classList.remove("dragging");
-  });
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
 
-  document.addEventListener("mousemove", (e) => {
+    lastX = e.pageX;
+    velocity = 0;
+
+    cancelAnimationFrame(raf);
+  }
+
+  function stopDrag() {
     if (!isDown) return;
+    isDown = false;
+    slider.classList.remove('dragging');
 
-    const dx = e.pageX - startX;
-    container.scrollLeft = scrollStart - dx;
-  });
-
-});
-
-/* navbar menü színek */
-
-const navBar = document.getElementById("navBar");
-const sections = document.querySelectorAll("section");
-const navCollapse = document.querySelector(".navbar-collapse");
-
-window.addEventListener("scroll", () => {
-
-  /* MOBILE / COLLAPSED → fix fehér navbar */
-  if (window.innerWidth < 992) {
-    navBar.classList.remove("dark");
-    return;
+    startMomentum();
   }
 
-  if (navCollapse.classList.contains("show")) {
-    navBar.classList.remove("dark");
-    return;
+  function onDrag(e) {
+    if (!isDown) return;
+    e.preventDefault();
+
+    const x = e.pageX - slider.offsetLeft;
+    const walk = x - startX;
+
+    slider.scrollLeft = scrollLeft - walk;
+
+    velocity = e.pageX - lastX;
+    lastX = e.pageX;
   }
 
-  for (const section of sections) {
+  function startMomentum() {
+    function momentumLoop() {
+      slider.scrollLeft -= velocity;
+      velocity *= 0.95;
 
-    const rect = section.getBoundingClientRect();
-
-    if (rect.top <= 80 && rect.bottom >= 80) {
-
-      const mode = section.dataset.nav;
-
-      navBar.classList.toggle("dark", mode === "dark");
-
-      break;
-    }
-  }
-});
-
-/* Modal ablak megjelenítés - bezárás */
-
-const overlay = document.querySelector(".newsletter-overlay");
-const closeBtn = document.querySelector(".modal-close");
-const trigger = document.querySelector("#about");
-
-if (!sessionStorage.getItem("newsletterShown")) {
-
-  const observer = new IntersectionObserver((entries) => {
-
-    if (entries[0].isIntersecting) {
-
-      overlay.classList.add("show");
-
-      sessionStorage.setItem("newsletterShown", "true");
-
-      observer.disconnect();
+      if (Math.abs(velocity) > 0.5) {
+        raf = requestAnimationFrame(momentumLoop);
+      }
     }
 
-  }, {
-    threshold: 0.4
-  });
+    raf = requestAnimationFrame(momentumLoop);
+  }
 
-  observer.observe(trigger);
+  slider.addEventListener('mousedown', startDrag);
+  slider.addEventListener('mousemove', onDrag);
+  slider.addEventListener('mouseleave', stopDrag);
+  slider.addEventListener('mouseup', stopDrag);
 }
 
-closeBtn.addEventListener("click", () => {
-  overlay.classList.remove("show");
-});
+/* Navbar on scroll */
+function initNavbarColor() {
+  const navBar = document.getElementById("navBar");
+  const sections = document.querySelectorAll("section");
+  const navCollapse = document.querySelector(".navbar-collapse");
 
-overlay.addEventListener("click", (e) => {
-  if (e.target === overlay) {
+  window.addEventListener("scroll", () => {
+
+    if (window.innerWidth < 992) {
+      navBar.classList.remove("dark");
+      return;
+    }
+
+    if (navCollapse.classList.contains("show")) {
+      navBar.classList.remove("dark");
+      return;
+    }
+
+    for (const section of sections) {
+      const rect = section.getBoundingClientRect();
+
+      if (rect.top <= 80 && rect.bottom >= 80) {
+        const mode = section.dataset.nav;
+        navBar.classList.toggle("dark", mode === "dark");
+        break;
+      }
+    }
+  });
+}
+
+/* Newsletter modal */
+function initNewsletterModal() {
+  const overlay = document.querySelector(".newsletter-overlay");
+  const closeBtn = document.querySelector(".modal-close");
+  const trigger = document.querySelector("#about");
+
+  if (!overlay || !closeBtn || !trigger) return;
+
+  function showModalOnce() {
+    if (sessionStorage.getItem("newsletterShown")) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        overlay.classList.add("show");
+        sessionStorage.setItem("newsletterShown", "true");
+        observer.disconnect();
+      }
+    }, { threshold: 0.4 });
+
+    observer.observe(trigger);
+  }
+
+  function closeModal() {
     overlay.classList.remove("show");
   }
-});
+
+  closeBtn.addEventListener("click", closeModal);
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  showModalOnce();
+}
+
+document.addEventListener("DOMContentLoaded", animateMouse);
+
+function initApp() {
+  initNavbarCollapse();
+  initGalleryDrag();
+  initNavbarColor();
+  initNewsletterModal();
+}
+
+document.addEventListener("DOMContentLoaded", initApp);
