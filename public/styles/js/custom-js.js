@@ -81,7 +81,7 @@ function initGalleryDrag() {
 
 /* Navbar on scroll */
 function initNavbarColor() {
-  const navBar = document.getElementById("navBar");
+  const navBar = document.querySelector(".navbar");
   const sections = document.querySelectorAll("section");
   const navCollapse = document.querySelector(".navbar-collapse");
 
@@ -143,8 +143,6 @@ function initNewsletterModal() {
 
   showModalOnce();
 }
-
-document.addEventListener("DOMContentLoaded", animateMouse);
 
 function initApp() {
   initNavbarCollapse();
