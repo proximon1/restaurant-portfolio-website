@@ -79,34 +79,46 @@ function initGalleryDrag() {
   slider.addEventListener('mouseup', stopDrag);
 }
 
-/* Navbar on scroll */
+/* Navbar coloring */
 function initNavbarColor() {
+  console.log("initNavbarColor elindult");
+
   const navBar = document.querySelector(".navbar");
   const sections = document.querySelectorAll("section");
   const navCollapse = document.querySelector(".navbar-collapse");
 
-  window.addEventListener("scroll", () => {
-
+  function updateNavbarColor() {
     if (window.innerWidth < 992) {
       navBar.classList.remove("dark");
       return;
     }
 
-    if (navCollapse.classList.contains("show")) {
-      navBar.classList.remove("dark");
+    console.log("updateNavbarColor fut");
+
+    if (!navBar) {
+      console.log("NINCS navbar");
       return;
     }
 
+    console.log("sections száma:", sections.length);
+
     for (const section of sections) {
       const rect = section.getBoundingClientRect();
+      console.log(section, rect.top, rect.bottom);
 
       if (rect.top <= 80 && rect.bottom >= 80) {
+        console.log("AKTÍV SECTION:", section);
         const mode = section.dataset.nav;
+        console.log("mode:", mode);
+
         navBar.classList.toggle("dark", mode === "dark");
         break;
       }
     }
-  });
+  }
+
+  window.addEventListener("scroll", updateNavbarColor);
+  updateNavbarColor();
 }
 
 /* Newsletter modal */
