@@ -432,7 +432,7 @@ footer a {
   transition: color 0.2s ease;
 }
 
-footer li:hover a {
+footer li:hover .footer-menu-item {
   color: var(--color-black);
 }
 
@@ -452,7 +452,6 @@ footer li:hover a {
   width: 80px;
 }
 
-/* Carousel */
 .showcase-carousel {
   height: 80vh;
   overflow-x: auto;
@@ -460,21 +459,19 @@ footer li:hover a {
   cursor: grab;
 }
 
-/* Track */
 .showcase-track {
   display: flex;
   gap: 24px;
   height: 100%;
 }
 
-/* Gallery = egy "slide" */
 .gallery {
   display: flex;
   flex-wrap: nowrap;
   gap: 16px;
 
   height: 100%;
-  flex: 0 0 auto; /* nem törik */
+  flex: 0 0 auto;
 }
 
 /* Item */
@@ -625,6 +622,12 @@ footer li:hover a {
 .background-linear-gradient > * {
   position: relative;
   z-index: 1;
+}
+
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: default;
 }
 
 /* ANIMATIONS */
