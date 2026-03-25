@@ -122,7 +122,7 @@ function initNavbarColor() {
 }
 
 /* Newsletter modal */
-function initNewsletterModal() {
+/* function initNewsletterModal() {
   const overlay = document.querySelector(".newsletter-overlay");
   const closeBtn = document.querySelector(".modal-close");
   const trigger = document.querySelector("#about");
@@ -154,7 +154,7 @@ function initNewsletterModal() {
   });
 
   showModalOnce();
-}
+} */
 
 function initApp() {
   initNavbarCollapse();

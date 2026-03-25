@@ -136,6 +136,10 @@ img {
   text-decoration: none;
 }
 
+.navbar.dark .navbutton:hover {
+  color: var(--color-black);
+}
+
 .navbutton {
   font-weight: 900;
   color: var(--color-beige);
@@ -143,10 +147,12 @@ img {
   line-height: 60px;
   letter-spacing: 0.03em;
   text-decoration: none;
+
+  transition: color 0.2s ease;
 }
 
 .navbar.dark .navbutton {
-  color: var(--color-black);
+  color: var(--color-burgundy);
 }
 
 .nav-center {
@@ -422,6 +428,12 @@ footer a {
   font-size: clamp(18px, 5vw, 30px);
   letter-spacing: 0.03em;
   text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+footer li:hover a {
+  color: var(--color-black);
 }
 
 .ciao-image {
