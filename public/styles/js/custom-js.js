@@ -93,23 +93,16 @@ function initNavbarColor() {
       return;
     }
 
-    console.log("updateNavbarColor fut");
-
     if (!navBar) {
-      console.log("NINCS navbar");
       return;
     }
-
-    console.log("sections száma:", sections.length);
 
     for (const section of sections) {
       const rect = section.getBoundingClientRect();
       console.log(section, rect.top, rect.bottom);
 
       if (rect.top <= 80 && rect.bottom >= 80) {
-        console.log("AKTÍV SECTION:", section);
         const mode = section.dataset.nav;
-        console.log("mode:", mode);
 
         navBar.classList.toggle("dark", mode === "dark");
         break;
