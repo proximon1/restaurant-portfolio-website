@@ -81,7 +81,6 @@ function initGalleryDrag() {
 
 /* Navbar coloring */
 function initNavbarColor() {
-  console.log("initNavbarColor elindult");
 
   const navBar = document.querySelector(".navbar");
   const sections = document.querySelectorAll("section");
@@ -99,7 +98,6 @@ function initNavbarColor() {
 
     for (const section of sections) {
       const rect = section.getBoundingClientRect();
-      console.log(section, rect.top, rect.bottom);
 
       if (rect.top <= 80 && rect.bottom >= 80) {
         const mode = section.dataset.nav;
@@ -115,7 +113,7 @@ function initNavbarColor() {
 }
 
 /* Newsletter modal */
-/* function initNewsletterModal() {
+function initNewsletterModal() {
   const overlay = document.querySelector(".newsletter-overlay");
   const closeBtn = document.querySelector(".modal-close");
   const trigger = document.querySelector("#about");
@@ -147,13 +145,13 @@ function initNavbarColor() {
   });
 
   showModalOnce();
-} */
+}
 
 function initApp() {
   initNavbarCollapse();
   initGalleryDrag();
   initNavbarColor();
-  initNewsletterModal();
+  /* initNewsletterModal(); */
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
