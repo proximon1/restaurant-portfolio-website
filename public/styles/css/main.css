@@ -549,16 +549,19 @@ footer li:hover .footer-menu-item {
   z-index: var(--z-content);
 }
 
-.gallery-item-title:hover {
+.gallery-item:hover .gallery-item-title {
   opacity: 1; 
 }
 
 /* ===== PATTERN ===== */
 
-.gallery-item:nth-child(4n + 1) { height: 50%; align-self: flex-start; }
-.gallery-item:nth-child(4n + 2) { height: 80%; align-self: center; }
-.gallery-item:nth-child(4n + 3) { height: 50%; align-self: flex-end; }
-.gallery-item:nth-child(4n + 4) { height: 80%; align-self: center; }
+.gallery-item.size-a { height: 60%; align-self: flex-start; }
+.gallery-item.size-b { height: 90%; align-self: center; }
+.gallery-item.size-c { height: 60%; align-self: flex-end; }
+.gallery-item.size-d { height: 75%; align-self: flex-start; }
+.gallery-item.size-e { height: 60%; align-self: center; }
+.gallery-item.size-f { height: 75%; align-self: center; }
+.gallery-item.size-g { height: 75%; align-self: flex-end; }
 
 /* UTILITIES */
 

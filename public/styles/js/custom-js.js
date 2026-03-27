@@ -147,10 +147,28 @@ function initNewsletterModal() {
   showModalOnce();
 }
 
+function initRandomGalleryItem() {
+  const items = document.querySelectorAll('.gallery-item');
+
+  const pattern = ['size-b', 'size-c', 'size-d', 'size-e', 'size-f', 'size-g'];
+
+  if (items[0]) {
+    items[0].classList.add('size-a');
+  }
+
+  const shuffled = [...pattern].sort(() => Math.random() - 0.5);
+
+  items.forEach((item, i) => {
+    if (i === 0) return;
+    item.classList.add(shuffled[(i - 1) % shuffled.length]);
+  });
+}
+
 function initApp() {
   initNavbarCollapse();
   initGalleryDrag();
   initNavbarColor();
+  initRandomGalleryItem();
   /* initNewsletterModal(); */
 }
 
