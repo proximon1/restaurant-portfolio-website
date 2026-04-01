@@ -1,5 +1,6 @@
 import { configDotenv } from "dotenv";
 import express from "express";
+import expressLayouts from "express-ejs-layouts";
 import pageRoutes from "./routes/pageRoutes.js";
 import "./db.js";
 import session from "express-session";
@@ -10,9 +11,16 @@ const app = express();
 const port = process.env.APP_PORT;
 
 app.set("view engine", "ejs");
+app.set("layout", false);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(expressLayouts);
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,

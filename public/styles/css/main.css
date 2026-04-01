@@ -593,6 +593,10 @@ footer li:hover .footer-menu-item {
   width: clamp(90px, 15vw, 180px);
 }
 
+.mouse-black-image {
+  inset: -120% auto auto -10%;
+}
+
 .showcase-carousel {
   height: 80vh;
   overflow-x: auto;
@@ -969,7 +973,7 @@ footer li:hover .footer-menu-item {
   }
 
   .mouse-black-image {
-    inset: -140% auto auto -10%;
+    inset: -120% auto auto -10%;
   }
 
   .hero-video.desktop {
