@@ -1,0 +1,25 @@
+<section class="projects py-5 py-xl-5">
+  <h4 id="projects" class="about-title burgundy mb-0 pt-0 px-5">
+    project gallery
+  </h4>
+
+  <div class="showcase-carousel mt-4 pb-4">
+    <div class="showcase-track px-0 pt-2">
+
+      <div class="gallery px-5 py-4">
+        <% projects.forEach(project => { %>
+
+          <a href="/projects/<%= project.slug %>" class="gallery-item">
+            <img src="<%= project.main_image_url %>" alt="" />
+
+            <h5 class="gallery-item-title archivo">
+              <%= project.title.toUpperCase() %>
+            </h5>
+          </a>
+
+        <% }) %>
+      </div>
+      
+    </div>
+  </div>
+</section>

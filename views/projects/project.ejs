@@ -1,0 +1,77 @@
+<%- include("../partials/header.ejs") %>
+<section class="project" data-nav="dark">
+  <div class="project-main-data mx-5 pb-md-5 row">
+    <div 
+      class="project-main-picture col-12 col-md-6"
+      style="background-image: url('<%= mainImage["image-url"] %>')">
+    </div>
+
+    <div class="col-8 col-md-4 px-0 px-md-4 d-flex flex-column">
+      <h1 class="project-title archivo bold pt-4 pt-md-0">
+        <%= project.title %>
+      </h1>
+      <strong class="project-subtitle archivo bold pb-4">
+        <%= project.subtitle %>
+      </strong>
+      <div class="d-flex flex-column flex-grow-1 justify-content-center archivo-narrow">
+        <p> <%= project.description %> </p>
+      </div>
+    </div>
+
+    <div class="col-4 col-md-2">
+      <ul class="project-type-list pt-4 pt-md-0 d-flex flex-column align-items-end align-items-md-start">
+        <% tags.forEach(tag => { %>
+          <li class="archivo-narrow bold burgundy">
+            <%= tag.name.toUpperCase() %>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="project-gallery mx-5 mb-5 py-5">
+    <% items.forEach(item => { %>
+      <% if (item.layout && item.layout.includes('blank')) { %>
+        
+        <div class="project-gallery-item <%= item.layout %>"></div>
+
+      <% } else { %>
+
+        <div class="project-gallery-item <%= item.layout %>">
+          <img src="<%= item["image-url"] %>">
+        </div>
+
+      <% } %>
+    <% }) %>
+  </div>
+
+  <div class="project-footnotes d-flex gap-3 mx-5 my-5 flex-wrap">
+
+    <% let footnoteIndex = 1; %>
+
+    <% items.forEach(item => { %>
+      <% if (item.description) { %>
+
+        <div class="footnote archivo narrow">
+          <strong class="burgundy"><%= footnoteIndex %>.</strong>
+          <p><%= item.description %></p>
+        </div>
+
+        <% footnoteIndex++; %>
+
+      <% } %>
+    <% }) %>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <img src="" alt="">
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-indicator">
+      <span class="arrow"></span>
+    </div>
+  </div>
+
+</section>
+<%- include("../partials/footer.ejs") %>

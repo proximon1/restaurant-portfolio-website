@@ -1,0 +1,9 @@
+<form method="POST" action="/admin/login">
+  <input name="username" placeholder="Felhasználó" />
+  <input name="password" type="password" placeholder="Jelszó" />
+  <button type="submit">Belépés</button>
+</form>
+
+<% if (error) { %>
+  <p style="color:red;">Hibás felhasználónév vagy jelszó</p>
+<% } %>
