@@ -18,6 +18,7 @@ function initGalleryDrag() {
   const slider = document.querySelector('.showcase-carousel');
   if (!slider) return;
 
+  let isDragging = false;
   let isDown = false;
   let startX;
   let scrollLeft;
@@ -45,6 +46,10 @@ function initGalleryDrag() {
     slider.classList.remove('dragging');
 
     startMomentum();
+
+    setTimeout(() => {
+      isDragging = false;
+    }, 0);
   }
 
   function onDrag(e) {
@@ -53,6 +58,10 @@ function initGalleryDrag() {
 
     const x = e.pageX - slider.offsetLeft;
     const walk = x - startX;
+
+    if (Math.abs(walk) > 5) {
+    isDragging = true;
+  }
 
     slider.scrollLeft = scrollLeft - walk;
 
@@ -77,7 +86,13 @@ function initGalleryDrag() {
   slider.addEventListener('mousemove', onDrag);
   slider.addEventListener('mouseleave', stopDrag);
   slider.addEventListener('mouseup', stopDrag);
-}
+  slider.addEventListener('click', (e) => {
+    if (isDragging) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+  };
 
 /* Navbar coloring */
 function initNavbarColor() {
@@ -166,6 +181,9 @@ function initRandomGalleryItem() {
 
 function initLightbox() {
   const lightbox = document.getElementById('lightbox');
+
+  if (!lightbox) return;
+  
   const lightboxImg = lightbox.querySelector('img');
 
   document.querySelectorAll('.project-gallery-item img').forEach(img => {
@@ -238,7 +256,6 @@ function initApp() {
     showDelay: 1000,
     selector: ".scroll-hint"
   });
-  initMouseEscape("contacts");
   /* initNewsletterModal(); */
 }
 

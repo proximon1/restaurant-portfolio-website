@@ -45,11 +45,11 @@
       <div class="col-12 col-xl-6 position-relative">
         <div class="row h-100">
           <div class="col-4 pe-1">
-            <div class="about-picture-left"></div>
+            <div class="about-picture-left" style="background: url('<%= landing.about_image_small %>') center / cover no-repeat"></div>
           </div>
 
           <div class="col-8 ps-1">
-            <div class="about-picture-right"></div>
+            <div class="about-picture-right" style="background: url('<%= landing.about_image_large %>') 25% center / cover no-repeat"></div>
           </div>
         </div>
       </div>
@@ -61,30 +61,13 @@
           <div class="col-12 col-xl-8">
             <h3 id="about" class="about-title archivo pt-5 pt-xl-0">what is RAT?</h3>
             <p class="about-label archivo-narrow burgundy mb-4">
-              RAT is a food design studio exploring the delicate intersection
-              between food, art, architecture, and design, proposing a culinary
-              experience conceived as a performance.
-            </p>
-            <p class="about-label archivo-narrow burgundy mb-4">
-              We believe that food is the most democratic art medium. Every
-              person, every day, is confronted with the question of what to eat,
-              why, and how that choice can have an impact on health, the world,
-              the environment and society.
-            </p>
-            <p class="about-label archivo-narrow burgundy">
-              Precisely because of its immediacy, food becomes a powerful
-              creative practice, a tool to generate reflections on other
-              artistic expressions, which we explore through an
-              interdisciplinary approach, where dishes and tablescapes are not
-              thought as mere surfaces to decorate, but as spaces to inhabit.
-              Each culinary scenario is a carefully constructed microcosm where
-              taste, matter, and storytelling coexist.
+              <%= landing.about_description %>
             </p>
           </div>
           <!-- Picture -->
           <div class="col-12 col-xl-4 py-5 py-xl-0 d-flex flex-column justify-content-center align-items-center">
             <div class="gif-wrap">
-              <img src="/images/aboutus.gif" class="about-gif-right" alt="" />
+              <img src="<%= landing.about_video %>" class="about-gif-right" alt="" />
               <div class="gif-caption">
                 <p class="gif-caption-text des-montilles">sneak - peak</p>
               </div>

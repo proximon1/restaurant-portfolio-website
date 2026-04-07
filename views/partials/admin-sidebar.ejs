@@ -1,25 +1,27 @@
 <aside class="admin-sidebar">
-  <h2 class="mb-4 p-2">Admin</h2>
+  <div class="admin-logo d-flex align-items-center">
+    <h2 class="ps-3 admin-sidebar-title">RAT Admin</h2>
+  </div>
 
   <nav class="d-flex flex-column gap-2">
 
     <a href="/admin"
-       class="sidebar-link <%= currentPath === '/admin' ? 'active' : '' %>">
+       class="sidebar-link ps-3 <%= currentPath === '/admin' ? 'active' : '' %>">
       Dashboard
     </a>
 
     <a href="/admin/projects"
-       class="sidebar-link <%= currentPath.startsWith('/admin/projects') ? 'active' : '' %>">
+       class="sidebar-link ps-3 <%= currentPath.startsWith('/admin/projects') ? 'active' : '' %>">
       Project editor
     </a>
 
     <a href="/admin/landing"
-       class="sidebar-link <%= currentPath.startsWith('/admin/landing') ? 'active' : '' %>">
+       class="sidebar-link ps-3 <%= currentPath.startsWith('/admin/landing') ? 'active' : '' %>">
       Landing editor
     </a>
 
     <a href="/admin/statistics"
-       class="sidebar-link <%= currentPath.startsWith('/admin/statistics') ? 'active' : '' %>">
+       class="sidebar-link ps-3 <%= currentPath.startsWith('/admin/statistics') ? 'active' : '' %>">
       Statistics
     </a>
 

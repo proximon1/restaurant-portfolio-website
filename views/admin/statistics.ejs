@@ -1,2 +1,26 @@
-<h1>Statistics</h1>
-<p>Welcome on the statistics page</p>
+<div class="admin-container">
+  <h1 class="mb-4">Statistics</h1>
+
+  <!-- TOP CARDS -->
+  <div class="statistics-cards mb-4">
+    <div class="admin-card">
+      <h3>Average time on the website daily (last 30 days)</h3>
+      <p id="avgTime" style="font-size:24px; font-weight:700;">--</p>
+    </div>
+  </div>
+
+  <!-- GRAPH -->
+  <div class="statistics-card mb-4">
+    <h3>Visitors (last 30 days)</h3>
+    <canvas id="visitorsChart"></canvas>
+  </div>
+
+  <!-- TOP PAGES -->
+  <div class="statistics-card">
+    <h3>Top pages (overall)</h3>
+    <ul id="topPagesList"></ul>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/admin-stats.js"></script>

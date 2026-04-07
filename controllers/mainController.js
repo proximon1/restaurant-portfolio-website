@@ -1,9 +1,10 @@
-import { getAllProjects } from "../models/projectModel.js";
+import { getAllProjects, getLanding } from "../models/projectModel.js";
 
 export const renderMain = async (req, res) => {
     try {
         const projects = await getAllProjects();
-        res.render("main.ejs", { projects });
+        const landing = await getLanding();
+        res.render("main.ejs", { projects, landing });
     } catch (error) {
         console.log("Can't load the main page: " + error.message);
     };

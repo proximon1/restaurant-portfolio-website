@@ -249,6 +249,7 @@ section.projects {
   font-size: clamp(20px, 3vw, 23px);
   font-weight: 700;
   line-height: 30px;
+  white-space: pre-line;
 }
 
 .about-title {
@@ -260,13 +261,11 @@ section.projects {
 .about-picture-left {
   min-height: 200px;
   height: 50%;
-  background: url("/images/about_picture_left.png") center / cover no-repeat;
 }
 
 .about-picture-right {
   min-height: 600px;
   height: 100%;
-  background: url("/images/about_picture_right.png") 25% center / cover no-repeat;
 }
 
 .about-gif-right {

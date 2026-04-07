@@ -20,7 +20,7 @@ export const getAllProjects = async () => {
     LEFT JOIN project_items pi 
       ON pi.project_id = p.id 
       AND pi.is_main = true
-    ORDER BY p.id ASC
+    ORDER BY p.created_at DESC
   `);
 
   return result.rows;
@@ -58,5 +58,10 @@ export const getMainImage = async (projectId) => {
     LIMIT 1
   `, [projectId]);
 
+  return result.rows[0];
+};
+
+export const getLanding = async () => {
+  const result = await db.query(`SELECT * FROM landing WHERE id = 1`);
   return result.rows[0];
 };

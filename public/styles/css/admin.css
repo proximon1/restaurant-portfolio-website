@@ -1,23 +1,16 @@
-.sidebar-link {
-  color: #ccc;
-  text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 8px;
-
-  transition: all 0.2s ease;
+:root {
+  --color-burgundy: #b62336;
+  --color-beige: #f5f6f1;
+  --color-black: #0b0202;
 }
 
-.sidebar-link:hover {
-  background: rgba(255,255,255,0.1);
-  color: white;
-}
+/* ========================
+   LAYOUT
+======================== */
 
-.sidebar-link.active {
-  background: rgba(255,255,255,0.1);
-  color: white;
-
-  border-left: 3px solid #b62336; /* brand */
-  padding-left: 9px;
+body {
+  margin: 0px;
+  -webkit-font-smoothing: antialiased;
 }
 
 .admin-layout {
@@ -33,19 +26,66 @@
   width: 240px;
   position: fixed;
   height: 100vh;
-  background-color: lightcoral;
+  background-color: var(--color-burgundy);
+}
+
+.admin-sidebar a {
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 22px;
+}
+
+.admin-sidebar-title {
+  color: var(--color-beige);
+  font-family: "Archivo", sans-serif;
+  font-size: 32px;
+  margin: 0px;
+}
+
+.admin-logo {
+  height: 60px;
 }
 
 .admin-content {
   padding: 24px;
-  background: lightsalmon;
+  min-height: calc(100vh - 60px);
 
-  min-height: calc(100vh - 60px); /* topbar levonva */
+  background: linear-gradient(
+    to bottom,
+    var(--color-beige) 0%,
+    rgba(182, 35, 54, 0.2) 100%
+  );
 }
+
+/* ========================
+   SIDEBAR
+======================== */
+
+.sidebar-link {
+  color: var(--color-beige);
+  text-decoration: none;
+  padding: 10px 12px;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.sidebar-link.active {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border-left: 3px solid var(--color-beige);
+  padding-left: 9px;
+}
+
+/* ========================
+   TOPBAR
+======================== */
 
 .admin-topbar {
   height: 60px;
-  background: lightblue;
+  background: var(--color-burgundy);
 
   display: flex;
   align-items: center;
@@ -58,8 +98,16 @@
   z-index: 10;
 }
 
+/* USER */
+
 .admin-user {
   position: relative;
+}
+
+.admin-user-name {
+  color: var(--color-beige);
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 18px;
 }
 
 .admin-user-trigger {
@@ -73,7 +121,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #111;
+  background: var(--color-beige);
   color: white;
 
   display: flex;
@@ -81,6 +129,8 @@
   justify-content: center;
   font-size: 14px;
 }
+
+/* DROPDOWN */
 
 .admin-user-dropdown {
   position: absolute;
@@ -103,6 +153,12 @@
   transition: all 0.2s ease;
 }
 
+.admin-user.open .admin-user-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 .admin-user-dropdown a {
   display: block;
   padding: 8px 12px;
@@ -114,11 +170,9 @@
   background: #f5f5f5;
 }
 
-.admin-user.open .admin-user-dropdown {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
+/* ========================
+   DASHBOARD CARDS
+======================== */
 
 .admin-cards {
   display: grid;
@@ -133,24 +187,42 @@
 
 .admin-card {
   position: relative;
-  background: white;
+
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
   padding: 24px;
-  border-radius: 14px;
+  border-radius: 16px;
 
   border: 1px solid #eee;
 
-  transition: all 0.2s ease;
-
   height: 100%;
+
+  transition: all 0.2s ease;
 }
 
 .admin-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(182, 35, 54, 0.12);
   border-color: #ddd;
 }
 
-.admin-card:hover::after {
+.admin-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  border-radius: 16px;
+
+  background: radial-gradient(
+    circle at top left,
+    rgba(182, 35, 54, 0.08),
+    transparent 40%
+  );
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.admin-card:hover::before {
   opacity: 1;
 }
 
@@ -163,6 +235,10 @@
   transition: 0.2s;
 }
 
+.admin-card:hover::after {
+  opacity: 1;
+}
+
 .admin-card h3 {
   margin-bottom: 8px;
   font-size: 18px;
@@ -171,4 +247,604 @@
 .admin-card p {
   font-size: 14px;
   color: #666;
+}
+
+/* ========================
+   FORM CARDS (LANDING)
+======================== */
+
+.project-card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 14px;
+
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.project-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.project-card label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.project-card .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-card input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.char-counter {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
+
+/* ========================
+   PROJECTS
+======================== */
+
+.admin-subcontainer {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table img {
+  width: 140px;
+}
+
+.admin-table th {
+  text-align: left;
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+  padding: 12px;
+
+  border-bottom: 1px solid #eee;
+  background: #ebebeb;
+}
+
+.admin-table tbody tr:not(.add-project-row):nth-child(even) {
+  background: #f5f5f5;
+}
+
+.admin-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 14px;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+.admin-table td:first-child {
+  font-weight: 600;
+}
+
+.add-project-row {
+  cursor: pointer;
+  background-color: var(--color-burgundy);
+  color: var(--color-beige);
+  opacity: 1;
+  transition: 0.2s;
+}
+
+/* ========================
+   HELP ICON
+======================== */
+
+.help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  border-radius: 50%;
+  background: #ddd;
+  color: #333;
+
+  cursor: help;
+}
+
+/* ========================
+   BUTTON
+======================== */
+
+.save-button {
+  background-color: var(--color-burgundy);
+  color: var(--color-beige);
+
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+
+  padding: 10px 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  transition: all 0.2s ease;
+}
+
+.save-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background-color: #333;
+}
+
+.save-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(182, 35, 54, 0.25);
+}
+
+.save-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ========================
+   MODAL (UPGRADED)
+======================== */
+
+.admin-modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(11, 2, 2, 0.55);
+  backdrop-filter: blur(4px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.25s ease;
+  z-index: 9999;
+}
+
+.admin-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.admin-modal-content {
+  background: var(--color-beige);
+  padding: 32px;
+  border-radius: 18px;
+
+  width: 520px;
+  max-width: 92%;
+
+  position: relative;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+
+  transform: translateY(20px) scale(0.96);
+  opacity: 0;
+
+  transition: all 0.25s ease;
+}
+
+.admin-modal.open .admin-modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.admin-modal-content h3 {
+  margin-bottom: 20px;
+  font-family: "Archivo", sans-serif;
+  font-size: 22px;
+}
+
+.admin-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--color-black);
+  transition: transform 0.2s ease;
+}
+
+.admin-modal-close:hover {
+  transform: rotate(90deg);
+}
+
+.admin-modal .form-group {
+  margin-bottom: 16px;
+}
+
+input,
+textarea,
+select {
+  padding: 10px;
+
+  font-size: 14px;
+  font-family: inherit;
+
+  transition: all 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 2px rgba(182, 35, 54, 0.15);
+}
+
+label {
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.admin-modal input[type="number"],
+.admin-modal select,
+.admin-modal textarea {
+  width: 100%;
+}
+
+.admin-modal input,
+.admin-modal select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.admin-modal textarea {
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* ========================
+   IMAGE UPLOAD
+======================== */
+
+.image-upload {
+  position: relative;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.image-upload img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+}
+
+.image-upload input {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  opacity: 0;
+}
+
+.checkmark {
+  color: var(--color-burgundy);
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.image-upload::after {
+  content: "Change image";
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,0.5);
+  color: white;
+  pointer-events: none;
+
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.image-upload:hover::after {
+  opacity: 1;
+}
+
+.statistics-card {
+  background: #fff;
+  padding: 36px;
+  border-radius: 14px;
+
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
+}
+
+.statistics-card canvas {
+  height: 300px;
+}
+
+#topPagesList {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+#topPagesList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+/* ========================
+   LOGIN PAGE
+======================== */
+
+.login-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    to bottom,
+    var(--color-beige) 0%,
+    rgba(182, 35, 54, 0.2) 100%
+  );
+}
+
+/* ========================
+   CARD
+======================== */
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+
+  width: 100%;
+  max-width: 360px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+  text-align: center;
+}
+
+/* ========================
+   TITLE
+======================== */
+
+.login-title {
+  font-family: "Archivo", sans-serif;
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+/* ========================
+   FORM
+======================== */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-form input {
+  padding: 12px;
+
+  border-radius: 10px;
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+
+  transition: all 0.2s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 2px rgba(182, 35, 54, 0.15);
+}
+
+.file-input-container {
+  font-size: 13px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+  background-color: white;
+}
+
+.file-input-container input {
+  flex: 1;
+  cursor: pointer; 
+}
+
+.clear-file {
+  opacity: 0.3;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0px 12px;
+  display: none;
+}
+
+.project-card input[type="file"]:hover {
+  background: #f0f0f0;
+}
+
+/* ========================
+   BUTTON
+======================== */
+
+.login-button {
+  margin-top: 8px;
+
+  padding: 12px;
+  border-radius: 10px;
+
+  border: none;
+
+  background: var(--color-burgundy);
+  color: var(--color-beige);
+
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+/* ========================
+   ERROR
+======================== */
+
+.login-error {
+  margin-top: 16px;
+  color: var(--color-burgundy);
+  font-size: 14px;
+}
+
+/* ========================
+   ADMIN TOAST
+======================== */
+
+.admin-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  font-size: 14px;
+  color: white;
+
+  opacity: 0;
+  transform: translateY(10px);
+
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.admin-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.admin-toast.success {
+  background: #2e7d32;
+}
+
+.admin-toast.error {
+  background: #c62828;
+}
+
+.admin-toast.warning {
+  background: #ed6c02;
+}
+
+/* ========================
+   DELETE PROJECT
+======================== */
+
+.delete-item-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--color-burgundy);
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.delete-item-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-burgundy);
+}
+
+.delete-item-btn:active {
+  transform: scale(0.95);
+}
+
+.delete-item-btn:focus {
+  outline: none;
+}
+
+.delete-item-btn:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+}
+
+#cancelDelete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--color-black);
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+#cancelDelete:hover {
+  color: var(--color-burgundy);
+}
+
+.mandatory {
+  color: var(--color-burgundy);
 }

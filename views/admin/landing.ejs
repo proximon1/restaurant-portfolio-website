@@ -1,2 +1,73 @@
-<h1>Dashboard</h1>
-<p>Welcome on the landing page editor</p>
+<div class="admin-container">
+  <h1 class="mb-4">Landing editor</h1>
+
+  <p class="mb-4">
+    This page allows you to manage the main visual content of the website’s
+    landing page.
+  </p>
+
+  <form class="js-validate-form" action="/admin/landing" method="POST" enctype="multipart/form-data">
+    <div class="project-card mb-4">
+      <h3>Main video</h3>
+
+      <div class="form-group file-input-wrapper">
+        <label>Upload main video <span class="mandatory">*</span></label>
+
+        <div class="file-input-container d-flex justify-content-between">
+          <input required type="file" name="mainVideo" accept="video/*" />
+          <button type="button" class="clear-file">x</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card mb-4">
+      <h3>About section</h3>
+
+      <div class="form-group">
+        <label>Small image <span class="mandatory">*</span></label>
+
+        <div class="file-input-container d-flex justify-content-between">
+          <input required type="file" name="aboutImageSmall" accept="image/*" />
+          <button type="button" class="clear-file">x</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Large image <span class="mandatory">*</span></label>
+
+        <div class="file-input-container d-flex justify-content-between">
+          <input required type="file" name="aboutImageLarge" accept="image/*" />
+          <button type="button" class="clear-file">x</button>
+        </div>
+        
+      </div>
+
+      <div class="form-group">
+        <label>Upload gif <span class="mandatory">*</span></label>
+
+        <div class="file-input-container d-flex justify-content-between">
+          <input required type="file" name="aboutVideo" accept="image/gif" />
+          <button type="button" class="clear-file">x</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>About description <span class="mandatory">*</span></label>
+        <textarea required
+          name="aboutDescription"
+          maxlength="800"
+          oninput="updateCounter(this)"
+          placeholder="Enter description..."
+        ></textarea>
+      </div>
+    </div>
+
+    <button data-submit class="save-button" id="saveBtn" disabled>Save changes</button>
+  </form>
+
+  <% if (message) { %>
+    <div class="admin-toast <%= message.type %>" id="adminToast">
+      <%= message.text %>
+    </div>
+  <% } %>
+</div>

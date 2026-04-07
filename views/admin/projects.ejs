@@ -1,2 +1,58 @@
-<h1>Projects</h1>
-<p>Welcome on the project editor</p>
+<div class="admin-container">
+  <h1 class="mb-4">Projects</h1>
+  <p class="mb-4">Here you can view, edit, and manage all projects, including their content, structure, and associated items.</p>
+
+  <div class="admin-subcontainer">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Subtitle</th>
+          <th>Created</th>
+          <th>Gallery items</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% projects.forEach(project => { %>
+          <tr onclick="window.location='/admin/projects/<%= project.slug %>'">
+            <td><%= project.title %></td>
+            <td><%= project.subtitle %></td>
+            <td><%= new Date(project.created_at).toLocaleDateString("en-EN") %></td>
+            <td><%= project.item_count %></td>
+            <td>
+              <button class="delete-item-btn" data-id="<%= project.id %>">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        <% }) %>
+
+        <tr class="add-project-row" onclick="window.location='/admin/projects/new'">
+          <td colspan="5" class="text-center">
+            + Add new project
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-modal" id="deleteModal">
+    <div class="admin-modal-content">
+      <h3>Delete item</h3>
+      <p>Are you sure you want to delete this item?</p>
+
+      <div class="d-flex justify-content-between gap-2 mt-3">
+        <button id="confirmDelete" class="save-button">Delete</button>
+        <button id="cancelDelete">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <% if (message) { %>
+    <div class="admin-toast <%= message.type %>" id="adminToast">
+      <%= message.text %>
+    </div>
+  <% } %>
+</div>

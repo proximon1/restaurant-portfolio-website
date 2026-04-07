@@ -9,8 +9,8 @@
       <div class="gallery px-5 py-4">
         <% projects.forEach(project => { %>
 
-          <a href="/projects/<%= project.slug %>" class="gallery-item">
-            <img src="<%= project.main_image_url %>" alt="" />
+          <a href="/projects/<%= project.slug %>" class="gallery-item" draggable="false">
+            <img src="<%= project.main_image_url %>" alt=""/>
 
             <h5 class="gallery-item-title archivo">
               <%= project.title.toUpperCase() %>
