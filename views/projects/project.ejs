@@ -19,7 +19,7 @@
     </div>
 
     <div class="col-4 col-md-2">
-      <ul class="project-type-list pt-4 pt-md-0 d-flex flex-column align-items-end align-items-md-start">
+      <ul class="project-type-list pt-4 pt-md-0 d-flex flex-column align-items-end align-items-xl-start">
         <% tags.forEach(tag => { %>
           <li class="archivo-narrow bold burgundy">
             <%= tag.name.toUpperCase() %>
@@ -54,7 +54,7 @@
 
         <div class="footnote archivo narrow">
           <strong class="burgundy"><%= footnoteIndex %>.</strong>
-          <p><%= item.description %></p>
+          <p class="project-description"><%= item.description %></p>
         </div>
 
         <% footnoteIndex++; %>

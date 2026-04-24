@@ -166,11 +166,13 @@ function initTextareaCounter(selector, max = 800) {
   const textarea = document.querySelector(selector);
   if (!textarea) return;
 
-  // counter elem létrehozása, ha nincs
-  let counter = document.createElement("div");
-  counter.className = "char-counter";
+  let counter = textarea.parentNode.querySelector(".char-counter");
 
-  textarea.parentNode.appendChild(counter);
+  if (!counter) {
+    counter = document.createElement("div");
+    counter.className = "char-counter";
+    textarea.parentNode.appendChild(counter);
+  }
 
   function update() {
     counter.innerText = `${textarea.value.length} / ${max}`;
@@ -178,7 +180,6 @@ function initTextareaCounter(selector, max = 800) {
 
   textarea.addEventListener("input", update);
 
-  // init
   update();
 }
 
@@ -230,7 +231,6 @@ function initFormValidation(formSelector) {
       inputs.forEach(input => {
         if (!input.hasAttribute("required")) return;
 
-        // FILE INPUT
         if (input.type === "file") {
           if (input.files.length === 0) {
             valid = false;
@@ -344,7 +344,7 @@ function initAddProjectItem() {
     const main = document.getElementById("modalMain");
     if (main) main.checked = false;
 
-    form.action = "/admin/project-items";
+    form.action = `/admin/project-items?slug=${window.projectSlug}`;
 
     modal.classList.add("open");
   });
@@ -423,10 +423,23 @@ function initEditProjectItem() {
       document.querySelector("#itemModal h3").innerText = "Edit item";
 
       // action (EDIT)
-      form.action = `/admin/project-items/${id}`;
+      form.action = `/admin/project-items/${id}?slug=${window.projectSlug}`;
 
       modal.classList.add("open");
     });
+  });
+}
+
+function initNewTagInput() {
+  const btn = document.getElementById("showTagInput");
+  const input = document.getElementById("newTagInput");
+
+  if (!btn || !input) return;
+
+  btn.addEventListener("click", () => {
+    input.style.display = "block";
+    input.focus();
+    btn.style.display = "none";
   });
 }
 
@@ -436,7 +449,7 @@ function initApp() {
     initVisitorsChart();
     renderTopPages();
     renderAvgTime();
-    initTextareaCounter("[name='aboutDescription']", 800);
+    initTextareaCounter("[name='description']", 800);
     initFileClearButtons();
     initToast();
     initFormValidation('.js-validate-form');
@@ -444,6 +457,7 @@ function initApp() {
     initAddProjectItem();
     initImagePreview();
     initEditProjectItem();
+    initNewTagInput();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

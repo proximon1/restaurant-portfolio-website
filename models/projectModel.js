@@ -62,6 +62,32 @@ export const getMainImage = async (projectId) => {
 };
 
 export const getLanding = async () => {
-  const result = await db.query(`SELECT * FROM landing WHERE id = 1`);
-  return result.rows[0];
+  const res = await db.query(`SELECT * FROM landing WHERE id = 1`);
+
+  const data = res.rows[0];
+
+  if (!data) return null;
+
+  return {
+    ...data,
+    main_video_horizontal: data.main_video_horizontal
+      ? `/images/landing/${data.main_video_horizontal.split('/').pop()}`
+      : null,
+
+    main_video_vertical: data.main_video_vertical
+      ? `/images/landing/${data.main_video_vertical.split('/').pop()}`
+      : null,
+
+    about_image_small: data.about_image_small
+      ? `/images/landing/${data.about_image_small.split('/').pop()}`
+      : null,
+
+    about_image_large: data.about_image_large
+      ? `/images/landing/${data.about_image_large.split('/').pop()}`
+      : null,
+
+    about_video: data.about_video
+      ? `/images/landing/${data.about_video.split('/').pop()}`
+      : null
+  };
 };

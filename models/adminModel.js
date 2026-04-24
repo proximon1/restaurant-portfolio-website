@@ -43,49 +43,78 @@ export const updateLandingData = async (data) => {
   await db.query(`
     UPDATE landing
     SET
-      main_video = COALESCE($1, main_video),
+      main_video_horizontal = COALESCE($1, main_video_horizontal),
       about_image_small = COALESCE($2, about_image_small),
       about_image_large = COALESCE($3, about_image_large),
       about_video = COALESCE($4, about_video),
-      about_description = COALESCE($5, about_description)
+      about_description = COALESCE($5, about_description),
+      main_video_vertical = COALESCE($6, main_video_vertical)
     WHERE id = 1
   `, [
-    data.main_video,
+    data.main_video_horizontal,
     data.about_image_small,
     data.about_image_large,
     data.about_video,
-    data.about_description
+    data.about_description,
+    data.main_video_vertical
   ]);
 };
 
-export const insertProject = async ({ title, subtitle, slug }) => {
+export const insertProject = async ({ title, subtitle, description, slug }) => {
   const result = await db.query(`
-    INSERT INTO projects (title, subtitle, slug, created_at)
-    VALUES ($1, $2, $3, NOW())
+    INSERT INTO projects (title, subtitle, description, slug, created_at)
+    VALUES ($1, $2, $3, $4, NOW())
     RETURNING *
-  `, [title, subtitle, slug]);
+  `, [title, subtitle, description, slug]);
 
   return result.rows[0];
 };
 
-export const updateProjectBySlug = async (oldSlug, { title, subtitle, slug }) => {
+export const updateProjectBySlug = async (oldSlug, { title, subtitle, description, slug }) => {
   const result = await db.query(`
     UPDATE projects
     SET title = $1,
         subtitle = $2,
-        slug = $3
-    WHERE slug = $4
+        description = $3,
+        slug = $4
+    WHERE slug = $5
     RETURNING *
-  `, [title, subtitle, slug, oldSlug]);
+  `, [title, subtitle, description, slug, oldSlug]);
 
   return result.rows[0];
 };
 
-export const deleteProjectById = async (id) => {
+export const deleteProjectWithItems = async (projectId, slug) => {
+  const folderPath = path.join(
+    "public",
+    "images",
+    "uploads",
+    "projects",
+    slug
+  );
+
+  try {
+    if (fs.existsSync(folderPath)) {
+      fs.rmSync(folderPath, { recursive: true, force: true });
+    }
+  } catch (err) {
+    console.error("Folder delete error:", err.message);
+  }
+
+  await db.query(`
+    DELETE FROM project_tags
+    WHERE project_id = $1
+  `, [projectId]);
+
+  await db.query(`
+    DELETE FROM project_items
+    WHERE project_id = $1
+  `, [projectId]);
+
   await db.query(`
     DELETE FROM projects
     WHERE id = $1
-  `, [id]);
+  `, [projectId]);
 };
 
 export const insertProjectItem = async ({
@@ -172,4 +201,67 @@ export const deleteProjectItemById = async (id) => {
       if (err) console.error("File delete error:", err);
     });
   }
+};
+
+export const getAllTags = async () => {
+  const res = await db.query(`
+    SELECT id, name
+    FROM tags
+    ORDER BY name
+  `);
+
+  return res.rows;
+};
+
+export const getProjectTagIds = async (projectId) => {
+  const res = await db.query(`
+    SELECT tag_id
+    FROM project_tags
+    WHERE project_id = $1
+  `, [projectId]);
+
+  return res.rows.map(r => r.tag_id);
+};
+
+export const setProjectTags = async (projectId, tagIds) => {
+  await db.query(`
+    DELETE FROM project_tags
+    WHERE project_id = $1
+  `, [projectId]);
+
+  if (!tagIds || tagIds.length === 0) return;
+
+  const values = tagIds.map((_, i) => `($1, $${i + 2})`).join(",");
+
+  await db.query(`
+    INSERT INTO project_tags (project_id, tag_id)
+    VALUES ${values}
+  `, [projectId, ...tagIds]);
+};
+
+export const createTagIfNotExists = async (name) => {
+  if (!name || !name.trim()) return null;
+
+  const trimmed = name.trim().toLowerCase();
+
+  const existing = await db.query(
+    `SELECT id FROM tags WHERE LOWER(name) = $1`,
+    [trimmed]
+  );
+
+  if (existing.rows.length) {
+    return existing.rows[0].id;
+  }
+
+  const res = await db.query(
+    `INSERT INTO tags (name) VALUES ($1) RETURNING id`,
+    [name.trim()]
+  );
+
+  return res.rows[0].id;
+};
+
+export const getLandingData = async () => {
+  const res = await db.query(`SELECT * FROM landing WHERE id = 1`);
+  return res.rows[0];
 };

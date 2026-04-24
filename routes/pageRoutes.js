@@ -8,8 +8,10 @@ import { deleteProjectItem, updateProjectItem, createProjectItem, deleteProject,
 import { requireAuth } from "../middlewares/auth.js";
 import { adminLayout } from "../middlewares/adminLayout.js";
 import { uploadProjectItem, uploadLanding } from "../middlewares/upload.js";
+import { desktopOnly } from '../middlewares/desktopOnly.js';
 
 const router = express.Router();
+router.use("/admin", desktopOnly); 
 router.use("/admin", adminLayout);
 
 router.get("/admin/login", renderLogin);

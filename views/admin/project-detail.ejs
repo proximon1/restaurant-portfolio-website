@@ -21,9 +21,59 @@
         <label>Subtitle</label>
         <input type="text" name="subtitle" value="<%= project.subtitle || '' %>">
       </div>
+
+      <label>
+        Description <span class="mandatory">*</span>
+      </label>
+
+      <textarea class="w-100"
+        required
+          name="description"
+          maxlength="800"
+          placeholder="Enter description..."
+      ><%= project.description || '' %></textarea>
+
+      <div class="char-counter" id="descriptionCounter">
+        0 / 800
+      </div>
+
+      <div class="tag-list">
+
+        <% tags.forEach(tag => { %>
+          <label>
+            <input 
+              type="checkbox" 
+              name="tags" 
+              value="<%= tag.id %>"
+
+              <% if (projectTags.includes(tag.id)) { %>
+                checked
+              <% } %>
+            >
+            <span><%= tag.name %></span>
+          </label>
+        <% }) %>
+
+        <!-- ➕ NEW TAG BUTTON -->
+        <div class="tag-add">
+          <button type="button" id="showTagInput">+ New tag</button>
+
+          <input 
+            type="text" 
+            name="newTag" 
+            id="newTagInput" 
+            placeholder="Enter tag..."
+          >
+        </div>
+      </div>
+
+      
+
       <button data-submit class="save-button mt-3"><%= isNew ? 'Create project' : 'Save' %></button>
     </form>
   </div>
+
+  
 
   <!-- PROJECT ITEMS -->
   <% if (!isNew) { %>
@@ -104,16 +154,22 @@
 
           <h3>Edit item</h3>
 
-          <form class="js-validate-form" id="itemForm" method="POST" enctype="multipart/form-data">
-              <input type="hidden" name="itemId" id="modalItemId">
+          <form 
+            class="js-validate-form" 
+            id="itemForm" 
+            action="/admin/project-items?slug=<%= project.slug %>"
+            method="POST" 
+            enctype="multipart/form-data"
+          >              
+            <input type="hidden" name="itemId" id="modalItemId">
 
               <!-- IMAGE -->
               <div class="form-group">
                   <label>Image</label>
 
                   <div class="image-upload">
-                  <img id="modalImage" src="" alt="">
-                  <input type="file" name="image" id="modalImageInput" accept="image/*">
+                    <img id="modalImage" src="" alt="">
+                    <input type="file" name="image" id="modalImageInput" accept="image/*">
                   </div>
               </div>
 

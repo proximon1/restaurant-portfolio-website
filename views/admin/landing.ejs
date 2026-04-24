@@ -7,58 +7,119 @@
   </p>
 
   <form class="js-validate-form" action="/admin/landing" method="POST" enctype="multipart/form-data">
+
+    <!-- MAIN VIDEO -->
     <div class="project-card mb-4">
       <h3>Main video</h3>
 
+      <!-- DESKTOP VIDEO -->
       <div class="form-group file-input-wrapper">
-        <label>Upload main video <span class="mandatory">*</span></label>
+        <label>Upload main video (horizontal - desktop)<span class="mandatory">*</span></label>
+
+        <% if (landing?.main_video_horizontal) { %>
+          <div class="current-file">
+            Current file:
+            <strong><%= landing.main_video_horizontal.split('/').pop() %></strong>
+          </div>
+        <% } else { %>
+          <div class="current-file">No file uploaded yet</div>
+        <% } %>
 
         <div class="file-input-container d-flex justify-content-between">
-          <input required type="file" name="mainVideo" accept="video/*" />
+          <input type="file" name="mainVideoHorizontal" accept="video/*" />
+          <button type="button" class="clear-file">x</button>
+        </div>
+      </div>
+
+      <!-- MOBILE VIDEO -->
+      <div class="form-group file-input-wrapper">
+        <label>Upload main video (vertical - phone)<span class="mandatory">*</span></label>
+
+        <% if (landing?.main_video_vertical) { %>
+          <div class="current-file">
+            Current file:
+            <strong><%= landing.main_video_vertical.split('/').pop() %></strong>
+          </div>
+        <% } else { %>
+          <div class="current-file">No file uploaded yet</div>
+        <% } %>
+
+        <div class="file-input-container d-flex justify-content-between">
+          <input type="file" name="mainVideoVertical" accept="video/*" />
           <button type="button" class="clear-file">x</button>
         </div>
       </div>
     </div>
 
+    <!-- ABOUT SECTION -->
     <div class="project-card mb-4">
       <h3>About section</h3>
 
+      <!-- SMALL IMAGE -->
       <div class="form-group">
         <label>Small image <span class="mandatory">*</span></label>
 
+        <% if (landing?.about_image_small) { %>
+          <div class="current-file">
+            Current file:
+            <strong><%= landing.about_image_small.split('/').pop() %></strong>
+          </div>
+        <% } else { %>
+          <div class="current-file">No file uploaded yet</div>
+        <% } %>
+
         <div class="file-input-container d-flex justify-content-between">
-          <input required type="file" name="aboutImageSmall" accept="image/*" />
+          <input type="file" name="aboutImageSmall" accept="image/*" />
           <button type="button" class="clear-file">x</button>
         </div>
       </div>
 
+      <!-- LARGE IMAGE -->
       <div class="form-group">
         <label>Large image <span class="mandatory">*</span></label>
 
+        <% if (landing?.about_image_large) { %>
+          <div class="current-file">
+            Current file:
+            <strong><%= landing.about_image_large.split('/').pop() %></strong>
+          </div>
+        <% } else { %>
+          <div class="current-file">No file uploaded yet</div>
+        <% } %>
+
         <div class="file-input-container d-flex justify-content-between">
-          <input required type="file" name="aboutImageLarge" accept="image/*" />
+          <input type="file" name="aboutImageLarge" accept="image/*" />
           <button type="button" class="clear-file">x</button>
         </div>
-        
       </div>
 
+      <!-- GIF -->
       <div class="form-group">
         <label>Upload gif <span class="mandatory">*</span></label>
 
+        <% if (landing?.about_video) { %>
+          <div class="current-file">
+            Current file:
+            <strong><%= landing.about_video.split('/').pop() %></strong>
+          </div>
+        <% } else { %>
+          <div class="current-file">No file uploaded yet</div>
+        <% } %>
+
         <div class="file-input-container d-flex justify-content-between">
-          <input required type="file" name="aboutVideo" accept="image/gif" />
+          <input type="file" name="aboutVideo" accept="image/gif" />
           <button type="button" class="clear-file">x</button>
         </div>
       </div>
 
+      <!-- DESCRIPTION -->
       <div class="form-group">
         <label>About description <span class="mandatory">*</span></label>
-        <textarea required
-          name="aboutDescription"
+        <textarea 
+          name="description"
           maxlength="800"
-          oninput="updateCounter(this)"
           placeholder="Enter description..."
-        ></textarea>
+        ><%= landing?.about_description || "" %></textarea>
       </div>
     </div>
 

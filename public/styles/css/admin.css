@@ -348,7 +348,8 @@ body {
   font-weight: 600;
 }
 
-.add-project-row {
+.add-project-row,
+.add-title-row {
   cursor: pointer;
   background-color: var(--color-burgundy);
   color: var(--color-beige);
@@ -847,4 +848,156 @@ label {
 
 .mandatory {
   color: var(--color-burgundy);
+}
+
+/* ========================
+   TAGS
+======================== */
+
+.tag-list {
+  display: grid;
+  grid-auto-flow: column;   /* oszlopokba tölt */
+  grid-template-rows: repeat(8, auto); /* max 8 elem / oszlop */
+  gap: 8px 24px; /* sor / oszlop gap */
+}
+
+.tag-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tag-list input[type="checkbox"] {
+  accent-color: var(--color-burgundy);
+  cursor: pointer;
+}
+
+.tag-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag-add button {
+  background: transparent;
+  border: 1px dashed var(--color-burgundy);
+  color: var(--color-burgundy);
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 16px;
+
+  padding: 0px 26px;
+  border-radius: 12px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.tag-add button:hover {
+  background: rgba(182, 35, 54, 0.1);
+}
+
+#newTagInput {
+  display: none;
+  padding: 6px 10px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+}
+
+.coming-soon-box {
+  margin-top: 12px;
+  padding: 14px 16px;
+  margin-bottom: 25px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(46, 125, 50, 0.08),
+    rgba(182, 35, 54, 0.05)
+  );
+
+  border: 1px solid rgba(0,0,0,0.05);
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.coming-soon {
+  display: inline-block;
+  margin-bottom: 4px;
+
+  font-size: 11px;
+  padding: 4px 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  color: white !important;
+  background: #2e7d32;
+
+  border-radius: 999px;
+
+  align-self: flex-start;
+}
+
+.coming-soon-text {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #2e7d32 !important;
+}
+
+.admin-card:hover .coming-soon-box {
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.1),
+    0 0 12px rgba(46, 125, 50, 0.25);
+
+  animation: floatWiggle 0.6s ease forwards;
+}
+
+.admin-card:hover .coming-soon {
+  animation: badgePop 0.4s ease;
+}
+
+.current-file {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.current-file strong {
+  color: #b62336;
+}
+
+@keyframes floatWiggle {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  30% {
+    transform: translateY(-6px) rotate(-1deg) scale(1.02);
+  }
+  60% {
+    transform: translateY(-10px) rotate(1deg) scale(1.03);
+  }
+  80% {
+    transform: translateY(-8px) rotate(-0.5deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(-8px) rotate(0deg) scale(1.02);
+  }
+}
+
+@keyframes badgePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15) rotate(-3deg); }
+  100% { transform: scale(1); }
 }
