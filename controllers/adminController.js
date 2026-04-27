@@ -3,7 +3,7 @@ import db from "../db.js";
 import path from "path";
 import fs from "fs";
 
-import { getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
+import { deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
 import { getProjectBySlug } from "../models/projectModel.js";
 
 const generateSlug = (text) => {
@@ -397,7 +397,9 @@ export const deleteProject = async (req, res) => {
 
 export const createProjectItem = async (req, res) => {
   const { projectId, layout, description } = req.body;
+  const { slug } = req.params;
 
+  console.log("BODY:", req.body);
   const noteOrder = req.body.note_order
     ? parseInt(req.body.note_order, 10)
     : null;
@@ -405,7 +407,7 @@ export const createProjectItem = async (req, res) => {
   const isMain = req.body.is_main === "on";
 
   const image = req.file
-    ? `/images/uploads/projects/${req.body.projectSlug}/${req.file.filename}`
+    ? `/images/uploads/projects/${slug}/${req.file.filename}`
     : null;
 
   await insertProjectItem({
@@ -425,13 +427,13 @@ export const createProjectItem = async (req, res) => {
 };
 
 export const updateProjectItem = async (req, res) => {
-  const { id } = req.params;
+  const { id, slug } = req.params;
 
   const { note_order, layout, description } = req.body;
 
   const image = req.file
-  ? `/images/uploads/projects/${req.body.projectSlug}/${req.file.filename}`
-  : null;
+    ? `/images/uploads/projects/${slug}/${req.file.filename}`
+    : null;
 
   await updateProjectItemById(id, {
     image,
@@ -474,3 +476,37 @@ export const deleteProjectItem = async (req, res) => {
   }
 };
 
+export const deleteTag = async (req, res) => {
+  const rawId = req.params.id;
+  const id = parseInt(rawId, 10);
+  const { slug } = req.query;
+
+  if (isNaN(id)) {
+    console.log("INVALID TAG ID:", rawId);
+
+    return res.redirect("/admin/projects");
+  }
+
+  try {
+    await deleteTagById(id);
+
+    req.session.message = {
+      type: "success",
+      text: "Tag deleted successfully"
+    };
+
+  } catch (err) {
+    console.error(err);
+
+    req.session.message = {
+      type: "error",
+      text: "Failed to delete tag"
+    };
+  }
+
+  if (!slug) {
+    return res.redirect("/admin/projects");
+  }
+
+  res.redirect(`/admin/projects/${slug}`);
+};

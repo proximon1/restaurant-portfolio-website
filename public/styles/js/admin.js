@@ -284,7 +284,7 @@ function initDeleteItems() {
   let selectedId = null;
   let selectedType = null;
 
-  document.querySelectorAll(".delete-item-btn").forEach(btn => {
+  document.querySelectorAll("[data-delete]").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -295,7 +295,7 @@ function initDeleteItems() {
       modal.classList.add("open");
     });
   });
-
+  
   cancelBtn.addEventListener("click", () => {
     modal.classList.remove("open");
     selectedId = null;
@@ -303,24 +303,37 @@ function initDeleteItems() {
   });
 
   confirmBtn.addEventListener("click", () => {
+    if (!modal.classList.contains("open")) return;
     if (!selectedId) return;
 
     if (selectedType === "item") {
       window.location = `/admin/project-items/delete/${selectedId}?slug=${window.projectSlug}`;
-    } else {
+    }
+
+    else if (selectedType === "project") {
       window.location = `/admin/projects/delete/${selectedId}`;
+    }
+
+    else if (selectedType === "tag") {
+      window.location = `/admin/tags/delete/${selectedId}?slug=${window.projectSlug}`;
     }
   });
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
+  if (e.target === modal) {
       modal.classList.remove("open");
+
+      selectedId = null;
+      selectedType = null;
     }
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
+  if (e.key === "Escape") {
       modal.classList.remove("open");
+
+      selectedId = null;
+      selectedType = null;
     }
   });
 }
@@ -344,7 +357,7 @@ function initAddProjectItem() {
     const main = document.getElementById("modalMain");
     if (main) main.checked = false;
 
-    form.action = `/admin/project-items?slug=${window.projectSlug}`;
+    form.action = `/admin/project-items/${window.projectSlug}`;
 
     modal.classList.add("open");
   });
@@ -373,24 +386,16 @@ function OpenCreateModal() {
   const img = document.getElementById("modalImage");
   const input = document.getElementById("modalImageInput");
 
-  // reset
   form.reset();
 
-  // image reset
   img.src = "/images/blank.png";
   input.value = "";
 
-  // checkbox reset
   document.getElementById("modalMain").checked = false;
-
-  // hidden id törlés
   document.getElementById("modalItemId").value = "";
-
-  // title
   document.querySelector("#itemModal h3").innerText = "Add item";
 
-  // action
-  form.action = `/admin/projects/${window.projectSlug}/items`;
+  form.action = `/admin/project-items/${window.projectSlug}`;
 
   modal.classList.add("open");
 }
@@ -411,19 +416,15 @@ function initEditProjectItem() {
       const layout = row.dataset.layout;
       const description = row.dataset.description;
 
-      // fill form
       document.getElementById("modalItemId").value = id;
       document.getElementById("modalImage").src = image || "/images/blank.png";
       document.getElementById("modalMain").checked = isMain;
       document.getElementById("modalOrder").value = order || "";
       document.getElementById("modalLayout").value = layout || "square";
       document.getElementById("modalDescription").value = description || "";
-
-      // title
       document.querySelector("#itemModal h3").innerText = "Edit item";
 
-      // action (EDIT)
-      form.action = `/admin/project-items/${id}?slug=${window.projectSlug}`;
+      form.action = `/admin/project-items/${window.projectSlug}/${id}`;
 
       modal.classList.add("open");
     });
@@ -431,15 +432,35 @@ function initEditProjectItem() {
 }
 
 function initNewTagInput() {
-  const btn = document.getElementById("showTagInput");
+  const showBtn = document.getElementById("showTagInput");
+  const wrapper = document.getElementById("newTagWrapper");
   const input = document.getElementById("newTagInput");
+  const addBtn = document.getElementById("addTagBtn");
+  const hiddenInput = document.getElementById("hiddenNewTag");
 
-  if (!btn || !input) return;
+  if (!showBtn || !wrapper || !input || !addBtn || !hiddenInput) return;
 
-  btn.addEventListener("click", () => {
-    input.style.display = "block";
+  showBtn.addEventListener("click", () => {
+    wrapper.style.display = "flex";
     input.focus();
-    btn.style.display = "none";
+    showBtn.style.display = "none";
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  addBtn.addEventListener("click", () => {
+    const value = input.value.trim();
+
+    if (!value) return;
+
+    hiddenInput.value = value;
+
+    input.closest("form").submit();
   });
 }
 

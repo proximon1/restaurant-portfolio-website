@@ -265,3 +265,15 @@ export const getLandingData = async () => {
   const res = await db.query(`SELECT * FROM landing WHERE id = 1`);
   return res.rows[0];
 };
+
+export const deleteTagById = async (tagId) => {
+  await db.query(`
+    DELETE FROM project_tags
+    WHERE tag_id = $1
+  `, [tagId]);
+
+  await db.query(`
+    DELETE FROM tags
+    WHERE id = $1
+  `, [tagId]);
+};
