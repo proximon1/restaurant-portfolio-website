@@ -481,10 +481,6 @@ section.projects {
   gap: 16px;
 }
 
-.project-gallery-item {
-  overflow: hidden;
-}
-
 .project-gallery-item img {
   width: 100%;
   height: 100%;
@@ -656,7 +652,7 @@ footer li:hover .footer-menu-item {
 
 .gallery-item:hover img {
   transform: scale(1.08);
-  filter: brightness(0.75) blur(1x);
+  filter: brightness(0.75) blur(1px);
 }
 
 .gallery-item-title {
