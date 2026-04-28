@@ -1,12 +1,12 @@
 <%- include("../partials/header.ejs") %>
 <section class="project" data-nav="dark">
-  <div class="project-main-data mx-5 pb-md-5 row">
+  <div class="project-main-data mx-3 pb-md-5 row">
     <div 
       class="project-main-picture col-12 col-md-6"
       style="background-image: url('<%= mainImage["image-url"] %>')">
     </div>
 
-    <div class="col-8 col-md-4 px-0 px-md-4 d-flex flex-column">
+    <div class="col-8 col-md-4 px-3 px-md-0 px-md-4 d-flex flex-column">
       <h1 class="project-title archivo bold pt-4 pt-md-0">
         <%= project.title %>
       </h1>
@@ -29,7 +29,7 @@
     </div>
   </div>
   
-  <div class="project-gallery mx-5 mb-5 py-5">
+  <div class="project-gallery mx-3 mb-5 py-5">
     <% items.forEach(item => { %>
       <% if (item.layout && item.layout.includes('blank')) { %>
         
