@@ -245,6 +245,47 @@ function initScrollHint(options = {}) {
   });
 }
 
+function initSessionTracking() {
+
+  if (window.location.pathname.startsWith("/admin")) return;
+
+  let sessionId = localStorage.getItem("sessionId");
+
+  if (!sessionId) {
+    fetch("/api/session/start", { method: "POST" })
+      .then(res => res.json())
+      .then(data => {
+        sessionId = data.sessionId;
+        localStorage.setItem("sessionId", sessionId);
+      });
+  }
+
+  setInterval(() => {
+    if (!sessionId) return;
+
+    fetch("/api/session/ping", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ sessionId })
+    });
+  }, 10000);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      if (!sessionId) return;
+
+      navigator.sendBeacon(
+        "/api/session/end",
+        JSON.stringify({ sessionId })
+      );
+
+      localStorage.removeItem("sessionId");
+    }
+  });
+}
+
 function initApp() {
   initNavbarCollapse();
   initGalleryDrag();
@@ -257,6 +298,7 @@ function initApp() {
     selector: ".scroll-hint"
   });
   /* initNewsletterModal(); */
+  initSessionTracking();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

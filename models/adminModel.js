@@ -33,7 +33,9 @@ export const getProjectItemsByProjectId = async (projectId) => {
     SELECT *
     FROM project_items
     WHERE project_id = $1
-    ORDER BY id ASC
+    ORDER BY 
+      is_main DESC,      -- fő kép mindig felül
+      note_order ASC NULLS LAST
   `, [projectId]);
 
   return result.rows;
@@ -125,11 +127,22 @@ export const insertProjectItem = async ({
   layout,
   description
 }) => {
+
+  if (note_order !== null) {
+    await db.query(`
+      UPDATE project_items
+      SET note_order = note_order + 1
+      WHERE project_id = $1
+      AND note_order >= $2
+      AND is_main = false
+    `, [projectId, note_order]);
+  }
+
   await db.query(`
-  INSERT INTO project_items 
-  (project_id, "image-url", is_main, note_order, layout, description)
-  VALUES ($1, $2, $3, $4, $5, $6)
-`, [projectId, image, is_main, note_order, layout, description]);
+    INSERT INTO project_items 
+    (project_id, "image-url", is_main, note_order, layout, description)
+    VALUES ($1, $2, $3, $4, $5, $6)
+  `, [projectId, image, is_main, note_order, layout, description]);
 };
 
 export const updateProjectItemById = async (id, {
@@ -140,14 +153,45 @@ export const updateProjectItemById = async (id, {
   description
 }) => {
 
+  const current = await db.query(`
+    SELECT project_id, note_order
+    FROM project_items
+    WHERE id = $1
+  `, [id]);
+
+  const projectId = current.rows[0].project_id;
+  const oldOrder = current.rows[0].note_order;
+
+  if (note_order !== null && oldOrder !== null && note_order !== oldOrder) {
+
+    if (note_order > oldOrder) {
+      await db.query(`
+        UPDATE project_items
+        SET note_order = note_order - 1
+        WHERE project_id = $1
+        AND note_order > $2
+        AND note_order <= $3
+        AND id != $4
+      `, [projectId, oldOrder, note_order, id]);
+
+    } else {
+      await db.query(`
+        UPDATE project_items
+        SET note_order = note_order + 1
+        WHERE project_id = $1
+        AND note_order >= $2
+        AND note_order < $3
+        AND id != $4
+      `, [projectId, note_order, oldOrder, id]);
+    }
+  }
+
   if (is_main) {
     await db.query(`
       UPDATE project_items
       SET is_main = false
-      WHERE project_id = (
-        SELECT project_id FROM project_items WHERE id = $1
-      )
-    `, [id]);
+      WHERE project_id = $1
+    `, [projectId]);
   }
 
   let result;
@@ -200,6 +244,25 @@ export const deleteProjectItemById = async (id) => {
     fs.unlink(fullPath, (err) => {
       if (err) console.error("File delete error:", err);
     });
+  }
+};
+
+export const normalizeProjectItemOrder = async (projectId) => {
+  const res = await db.query(`
+    SELECT id
+    FROM project_items
+    WHERE project_id = $1 AND is_main = false
+    ORDER BY note_order ASC NULLS LAST, id ASC
+  `, [projectId]);
+
+  const items = res.rows;
+
+  for (let i = 0; i < items.length; i++) {
+    await db.query(`
+      UPDATE project_items
+      SET note_order = $1
+      WHERE id = $2
+    `, [i + 1, items[i].id]);
   }
 };
 
@@ -276,4 +339,57 @@ export const deleteTagById = async (tagId) => {
     DELETE FROM tags
     WHERE id = $1
   `, [tagId]);
+};
+
+export const getProjectItemById = async (id) => {
+  const result = await db.query(
+    "SELECT * FROM project_items WHERE id = $1",
+    [id]
+  );
+
+  return result.rows[0];
+};
+
+// models/adminModel.js
+
+export const createSession = async (ip) => {
+  const result = await db.query(`
+    INSERT INTO page_sessions (started_at, ip)
+    VALUES (NOW(), $1)
+    RETURNING id
+  `, [ip]);
+
+  return result.rows[0].id;
+};
+
+export const finishSession = async (sessionId) => {
+  await db.query(`
+    UPDATE page_sessions
+    SET 
+      ended_at = NOW(),
+      duration_seconds = EXTRACT(EPOCH FROM (NOW() - started_at))
+    WHERE id = $1
+  `, [sessionId]);
+};
+
+export const getAvgTimeLast30Days = async () => {
+  const result = await db.query(`
+    SELECT 
+      ROUND(AVG(total_time)) AS avg_seconds
+    FROM (
+      SELECT 
+        ip,
+        SUM(
+          EXTRACT(EPOCH FROM (
+            COALESCE(ended_at, last_activity_at) - started_at
+          ))
+        ) AS total_time
+      FROM page_sessions
+      WHERE 
+        started_at >= NOW() - INTERVAL '30 days'
+      GROUP BY ip
+    ) t;
+  `);
+
+  return result.rows[0]?.avg_seconds || 0;
 };

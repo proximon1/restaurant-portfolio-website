@@ -103,15 +103,6 @@ function generateFakeTopPages() {
   })).sort((a, b) => b.views - a.views);
 }
 
-function generateFakeAvgTime() {
-  const seconds = Math.floor(Math.random() * 180) + 30; // 30–210 sec
-
-  const min = Math.floor(seconds / 60);
-  const sec = seconds % 60;
-
-  return `${min}m ${sec}s`;
-}
-
 function renderTopPages() {
   const list = document.getElementById("topPagesList");
   if (!list) return;
@@ -124,13 +115,6 @@ function renderTopPages() {
       <strong>${p.views} visitors</strong>
     </li>
   `).join("");
-}
-
-function renderAvgTime() {
-  const el = document.getElementById("avgTime");
-  if (!el) return;
-
-  el.textContent = generateFakeAvgTime();
 }
 
 function initVisitorsChart() {
@@ -250,6 +234,18 @@ function initFormValidation(formSelector) {
         if (!value) {
           valid = false;
         }
+        if (input.name === "note_order") {
+          const num = parseInt(input.value, 10);
+
+          if (isNaN(num) || num < 1) {
+            valid = false;
+          }
+
+          const max = parseInt(input.max, 10);
+          if (max && num > max) {
+            valid = false;
+          }
+        }
       });
 
       return valid;
@@ -359,7 +355,21 @@ function initAddProjectItem() {
 
     form.action = `/admin/project-items/${window.projectSlug}`;
 
+    const orderInput = document.getElementById("modalOrder");
+
+    const existingOrders = Array.from(document.querySelectorAll(".item-row"))
+      .map(row => parseInt(row.dataset.order))
+      .filter(n => !isNaN(n));
+
+    const maxOrder = existingOrders.length ? Math.max(...existingOrders) : 0;
+
+    orderInput.value = maxOrder + 1;
+
+    orderInput.min = 1;
+    orderInput.max = maxOrder + 1;
+
     modal.classList.add("open");
+    initMainCheckboxBehavior();
   });
 }
 
@@ -416,6 +426,16 @@ function initEditProjectItem() {
       const layout = row.dataset.layout;
       const description = row.dataset.description;
 
+      const orderInput = document.getElementById("modalOrder");
+      const existingOrders = Array.from(document.querySelectorAll(".item-row"))
+        .map(r => parseInt(r.dataset.order))
+        .filter(n => !isNaN(n));
+
+      const maxOrder = existingOrders.length ? Math.max(...existingOrders) : 0;
+
+      orderInput.min = 1;
+      orderInput.max = maxOrder;
+
       document.getElementById("modalItemId").value = id;
       document.getElementById("modalImage").src = image || "/images/blank.png";
       document.getElementById("modalMain").checked = isMain;
@@ -427,6 +447,7 @@ function initEditProjectItem() {
       form.action = `/admin/project-items/${window.projectSlug}/${id}`;
 
       modal.classList.add("open");
+      initMainCheckboxBehavior();
     });
   });
 }
@@ -464,12 +485,45 @@ function initNewTagInput() {
   });
 }
 
+function initMainCheckboxBehavior() {
+  const mainCheckbox = document.getElementById("modalMain");
+  const orderInput = document.getElementById("modalOrder");
+  const layoutInput = document.getElementById("modalLayout");
+  const descInput = document.getElementById("modalDescription");
+
+  if (!mainCheckbox || !orderInput || !layoutInput || !descInput) return;
+
+  function updateState() {
+    if (mainCheckbox.checked) {
+      orderInput.value = 0;
+      orderInput.disabled = true;
+
+      layoutInput.disabled = true;
+      descInput.disabled = true;
+
+      layoutInput.value = "square";
+
+    } else {
+      orderInput.disabled = false;
+      layoutInput.disabled = false;
+      descInput.disabled = false;
+
+      if (orderInput.value === "0") {
+        orderInput.value = "";
+      }
+    }
+  }
+
+  mainCheckbox.addEventListener("change", updateState);
+
+  updateState();
+}
+
 function initApp() {
     initDropdownToggle();
     initItemModal();
     initVisitorsChart();
     renderTopPages();
-    renderAvgTime();
     initTextareaCounter("[name='description']", 800);
     initFileClearButtons();
     initToast();
@@ -479,6 +533,7 @@ function initApp() {
     initImagePreview();
     initEditProjectItem();
     initNewTagInput();
+    initMainCheckboxBehavior();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

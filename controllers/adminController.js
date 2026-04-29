@@ -3,7 +3,7 @@ import db from "../db.js";
 import path from "path";
 import fs from "fs";
 
-import { deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
+import { getAvgTimeLast30Days, createSession, finishSession, getProjectItemById, normalizeProjectItemOrder, deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
 import { getProjectBySlug } from "../models/projectModel.js";
 
 const generateSlug = (text) => {
@@ -49,15 +49,30 @@ export const renderAdminLanding = async (req, res) => {
   }
 };
 
-export const renderAdminStatistics = (req, res) => {
-    try {
-        res.render("admin/statistics.ejs", {
-            currentPath: req.path,
-            layout: "admin/layout"
-        });
-    } catch (error) {
-        console.log("Can't load the statistics page: " + error.message);
-    };
+export const renderAdminStatistics = async (req, res) => {
+  try {
+    const avgSeconds = await getAvgTimeLast30Days();
+
+    const min = Math.floor(avgSeconds / 60);
+    const sec = avgSeconds % 60;
+
+    const formatted = `${min}m ${sec}s`;
+
+    res.render("admin/statistics.ejs", {
+      currentPath: req.path,
+      layout: "admin/layout",
+      avgTime: formatted
+    });
+
+  } catch (error) {
+    console.log("Can't load the statistics page: " + error.message);
+
+    res.render("admin/statistics.ejs", {
+      currentPath: req.path,
+      layout: "admin/layout",
+      avgTime: "--"
+    });
+  }
 };
 
 export const renderAdminProjects = async (req, res) => {
@@ -400,9 +415,13 @@ export const createProjectItem = async (req, res) => {
   const { slug } = req.params;
 
   console.log("BODY:", req.body);
-  const noteOrder = req.body.note_order
+  let noteOrder = req.body.note_order
     ? parseInt(req.body.note_order, 10)
     : null;
+
+  if (!noteOrder || noteOrder < 1) {
+    noteOrder = 1;
+  }
 
   const isMain = req.body.is_main === "on";
 
@@ -427,27 +446,62 @@ export const createProjectItem = async (req, res) => {
 };
 
 export const updateProjectItem = async (req, res) => {
-  const { id, slug } = req.params;
+  try {
+    const { id, slug } = req.params;
+    const { note_order, layout, description, projectId } = req.body;
 
-  const { note_order, layout, description } = req.body;
+    const isMain = req.body.is_main === "on";
 
-  const image = req.file
-    ? `/images/uploads/projects/${slug}/${req.file.filename}`
-    : null;
+    const image = req.file
+      ? `/images/uploads/projects/${slug}/${req.file.filename}`
+      : null;
 
-  await updateProjectItemById(id, {
-    image,
-    is_main: req.body.is_main === "on",
-    note_order: note_order ? parseInt(note_order, 10) : null,
-    layout,
-    description
-  });
+    let parsedOrder = note_order ? parseInt(note_order, 10) : null;
 
-  req.session.message = {
-            type: "success",
-            text: "Project item was modified successfully!"
-        };
-  res.redirect(`/admin/projects/${req.body.projectSlug}`);
+    if (isMain) {
+      parsedOrder = 0;
+    }
+
+    const items = await getProjectItemsByProjectId(projectId);
+    const maxOrder = items.filter(i => !i.is_main).length;
+
+    if (!isMain) {
+      if (!parsedOrder || parsedOrder < 1) {
+        parsedOrder = 1;
+      }
+
+      if (parsedOrder > maxOrder) {
+        parsedOrder = maxOrder;
+      }
+    }
+
+    await updateProjectItemById(id, {
+      image,
+      is_main: isMain,
+      note_order: parsedOrder,
+      layout,
+      description
+    });
+
+    await normalizeProjectItemOrder(projectId);
+
+    req.session.message = {
+      type: "success",
+      text: "Project item was modified successfully!"
+    };
+
+    res.redirect(`/admin/projects/${req.body.projectSlug}`);
+
+  } catch (err) {
+    console.error(err);
+
+    req.session.message = {
+      type: "error",
+      text: "Something went wrong!"
+    };
+
+    res.redirect(`/admin/projects/${req.body.projectSlug}`);
+  }
 };
 
 export const deleteProjectItem = async (req, res) => {
@@ -455,7 +509,16 @@ export const deleteProjectItem = async (req, res) => {
   const { slug } = req.query;
 
   try {
+    const item = await getProjectItemById(id);
+
+    if (!item) {
+      return res.redirect(`/admin/projects/${slug}`);
+    }
+
+    const projectId = item.project_id;
+
     await deleteProjectItemById(id);
+    await normalizeProjectItemOrder(projectId);
 
     req.session.message = {
       type: "success",
@@ -509,4 +572,40 @@ export const deleteTag = async (req, res) => {
   }
 
   res.redirect(`/admin/projects/${slug}`);
+};
+
+export const startSessionController = async (req, res) => {
+  try {
+    const sessionId = await createSession(req.ip);
+
+    console.log("Session started:", req.ip);
+
+    res.json({ sessionId });
+
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+export const endSessionController = async (req, res) => {
+  try {
+    const body = typeof req.body === "string"
+      ? JSON.parse(req.body)
+      : req.body;
+
+    const sessionId = body?.sessionId;
+
+    if (!sessionId) return res.sendStatus(400);
+
+    await finishSession(sessionId);
+
+    console.log("Session finished:", req.ip);
+
+    res.sendStatus(200);
+
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 };
