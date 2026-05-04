@@ -30,7 +30,11 @@
   </div>
   
   <div class="project-gallery mx-3 mb-5 py-5">
+
+    <% let galleryIndex = 1; %>
+
     <% items.forEach(item => { %>
+
       <% if (item.layout && item.layout.includes('blank')) { %>
         
         <div class="project-gallery-item <%= item.layout %>"></div>
@@ -39,30 +43,33 @@
 
         <div class="project-gallery-item <%= item.layout %>">
           <img src="<%= item["image-url"] %>">
-        </div>
 
+          <% if (item.description) { %>
+            <div class="gallery-index archivo"><%= galleryIndex %></div>
+            <% galleryIndex++; %>
+          <% } %>
+
+        </div>
       <% } %>
     <% }) %>
   </div>
 
   <div class="project-footnotes d-flex gap-3 mx-5 my-5 flex-wrap">
 
-    <% let visibleIndex = 1; %>
+    <% let footnoteIndex = 1; %>
 
-<% items.forEach(item => { %>
-  <% if (!(item.layout && item.layout.includes('blank'))) { %>
+    <% items.forEach(item => { %>
 
-    <% if (item.description) { %>
-      <div class="footnote archivo narrow">
-        <strong class="burgundy"><%= visibleIndex %>.</strong>
-        <p class="project-description"><%= item.description %></p>
-      </div>
-    <% } %>
+      <% if (!(item.layout && item.layout.includes('blank')) && item.description) { %>
 
-    <% visibleIndex++; %>
+        <div class="footnote archivo">
+          <strong class="burgundy"><%= footnoteIndex %>.</strong>
+          <p class="project-description"><%= item.description %></p>
+        </div>
 
-  <% } %>
-<% }) %>
+        <% footnoteIndex++; %>
+      <% } %>
+    <% }) %>
   </div>
 
   <div class="lightbox" id="lightbox">
