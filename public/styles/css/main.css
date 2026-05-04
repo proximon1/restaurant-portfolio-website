@@ -424,8 +424,8 @@ section.projects {
 }
 
 .project-main-picture {
-  min-height: 600px;
-  background-image: url("/images/project_image.png");
+  aspect-ratio: 4 / 3;
+  max-height: 80vh;
   background-size: cover;      
   background-position: center;
   background-repeat: no-repeat;
@@ -444,7 +444,8 @@ section.projects {
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
 
   display: flex;
   align-items: center;
@@ -484,7 +485,8 @@ section.projects {
 .project-gallery-item img {
   width: 100%;
   height: 100%;
-  object-fit: fit;
+  object-fit: contain;
+  object-position: center;
   display: block;
 }
 
@@ -506,6 +508,10 @@ section.projects {
 .project-gallery-item.wide-blank {
   grid-column: span 2;
   background-color: transparent;
+}
+
+.project-gallery-item:not(.square-blank):not(.wide-blank) {
+  cursor: pointer;
 }
 
 .footnote {
@@ -885,7 +891,6 @@ footer li:hover .footer-menu-item {
 
   .project-gallery-item:hover {
     transform: scale(1.05);
-    cursor: pointer;
   }
 
   .project-gallery-item:hover .gallery-index {
@@ -996,21 +1001,57 @@ footer li:hover .footer-menu-item {
   }
 
   .project-gallery {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
+
+  .project-gallery-item.square,
+  .project-gallery-item.wide {
+    height: auto;
+  }
+
+  .project-gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+  }
+
 }
 
 /* MEDIUM MOBIL */
 @media (max-width: 700px) {
   .project-gallery {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
+
+  .project-gallery-item.square,
+  .project-gallery-item.wide {
+    height: auto;
+  }
+
+  .project-gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
 }
 
 /* SMALL MOBIL */
 @media (max-width: 500px) {
   .project-gallery {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .project-gallery-item.square,
+  .project-gallery-item.wide {
+    height: auto;
+  }
+
+  .project-gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
   }
 
   .project-gallery-item.square-blank {

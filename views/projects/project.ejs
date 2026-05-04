@@ -1,6 +1,6 @@
 <%- include("../partials/header.ejs") %>
 <section class="project" data-nav="dark">
-  <div class="project-main-data mx-3 pb-md-5 row">
+  <div class="project-main-data mx-3 px-md-5 pb-md-5 row">
     <div 
       class="project-main-picture col-12 col-md-6"
       style="background-image: url('<%= mainImage["image-url"] %>')">
@@ -47,20 +47,22 @@
 
   <div class="project-footnotes d-flex gap-3 mx-5 my-5 flex-wrap">
 
-    <% let footnoteIndex = 1; %>
+    <% let visibleIndex = 1; %>
 
-    <% items.forEach(item => { %>
-      <% if (item.description) { %>
+<% items.forEach(item => { %>
+  <% if (!(item.layout && item.layout.includes('blank'))) { %>
 
-        <div class="footnote archivo narrow">
-          <strong class="burgundy"><%= footnoteIndex %>.</strong>
-          <p class="project-description"><%= item.description %></p>
-        </div>
+    <% if (item.description) { %>
+      <div class="footnote archivo narrow">
+        <strong class="burgundy"><%= visibleIndex %>.</strong>
+        <p class="project-description"><%= item.description %></p>
+      </div>
+    <% } %>
 
-        <% footnoteIndex++; %>
+    <% visibleIndex++; %>
 
-      <% } %>
-    <% }) %>
+  <% } %>
+<% }) %>
   </div>
 
   <div class="lightbox" id="lightbox">
