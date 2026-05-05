@@ -1,13 +1,11 @@
 /* Navbar collapse */
 function initNavbarCollapse() {
-  const mainNav = document.getElementById('mainNav');
+  const mainNav = document.getElementById("mainNav");
 
-  document.querySelectorAll('#mainNav a, .navbar-brand').forEach(link => {
-    link.addEventListener('click', () => {
+  document.querySelectorAll("#mainNav a, .navbar-brand").forEach((link) => {
+    link.addEventListener("click", () => {
       requestAnimationFrame(() => {
-        bootstrap.Collapse
-          .getOrCreateInstance(mainNav)
-          .hide();
+        bootstrap.Collapse.getOrCreateInstance(mainNav).hide();
       });
     });
   });
@@ -15,7 +13,7 @@ function initNavbarCollapse() {
 
 /* Gallery drag and move */
 function initGalleryDrag() {
-  const slider = document.querySelector('.showcase-carousel');
+  const slider = document.querySelector(".showcase-carousel");
   if (!slider) return;
 
   let isDragging = false;
@@ -29,7 +27,7 @@ function initGalleryDrag() {
 
   function startDrag(e) {
     isDown = true;
-    slider.classList.add('dragging');
+    slider.classList.add("dragging");
 
     startX = e.pageX - slider.offsetLeft;
     scrollLeft = slider.scrollLeft;
@@ -43,7 +41,7 @@ function initGalleryDrag() {
   function stopDrag() {
     if (!isDown) return;
     isDown = false;
-    slider.classList.remove('dragging');
+    slider.classList.remove("dragging");
 
     startMomentum();
 
@@ -60,8 +58,8 @@ function initGalleryDrag() {
     const walk = x - startX;
 
     if (Math.abs(walk) > 5) {
-    isDragging = true;
-  }
+      isDragging = true;
+    }
 
     slider.scrollLeft = scrollLeft - walk;
 
@@ -82,21 +80,24 @@ function initGalleryDrag() {
     raf = requestAnimationFrame(momentumLoop);
   }
 
-  slider.addEventListener('mousedown', startDrag);
-  slider.addEventListener('mousemove', onDrag);
-  slider.addEventListener('mouseleave', stopDrag);
-  slider.addEventListener('mouseup', stopDrag);
-  slider.addEventListener('click', (e) => {
-    if (isDragging) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  }, true);
-  };
+  slider.addEventListener("mousedown", startDrag);
+  slider.addEventListener("mousemove", onDrag);
+  slider.addEventListener("mouseleave", stopDrag);
+  slider.addEventListener("mouseup", stopDrag);
+  slider.addEventListener(
+    "click",
+    (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    true,
+  );
+}
 
 /* Navbar coloring */
 function initNavbarColor() {
-
   const navBar = document.querySelector(".navbar");
   const sections = document.querySelectorAll("section");
   const navCollapse = document.querySelector(".navbar-collapse");
@@ -138,13 +139,16 @@ function initNewsletterModal() {
   function showModalOnce() {
     if (sessionStorage.getItem("newsletterShown")) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        overlay.classList.add("show");
-        sessionStorage.setItem("newsletterShown", "true");
-        observer.disconnect();
-      }
-    }, { threshold: 0.4 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          overlay.classList.add("show");
+          sessionStorage.setItem("newsletterShown", "true");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
 
     observer.observe(trigger);
   }
@@ -163,12 +167,12 @@ function initNewsletterModal() {
 }
 
 function initRandomGalleryItem() {
-  const items = document.querySelectorAll('.gallery-item');
+  const items = document.querySelectorAll(".gallery-item");
 
-  const pattern = ['size-b', 'size-c', 'size-d', 'size-e', 'size-f', 'size-g'];
+  const pattern = ["size-b", "size-c", "size-d", "size-e", "size-f", "size-g"];
 
   if (items[0]) {
-    items[0].classList.add('size-a');
+    items[0].classList.add("size-a");
   }
 
   const shuffled = [...pattern].sort(() => Math.random() - 0.5);
@@ -180,29 +184,26 @@ function initRandomGalleryItem() {
 }
 
 function initLightbox() {
-  const lightbox = document.getElementById('lightbox');
+  const lightbox = document.getElementById("lightbox");
 
   if (!lightbox) return;
-  
-  const lightboxImg = lightbox.querySelector('img');
 
-  document.querySelectorAll('.project-gallery-item img').forEach(img => {
-    img.addEventListener('click', () => {
-      lightbox.classList.add('active');
+  const lightboxImg = lightbox.querySelector("img");
+
+  document.querySelectorAll(".project-gallery-item img").forEach((img) => {
+    img.addEventListener("click", () => {
+      lightbox.classList.add("active");
       lightboxImg.src = img.src;
     });
   });
 
-  lightbox.addEventListener('click', () => {
-    lightbox.classList.remove('active');
+  lightbox.addEventListener("click", () => {
+    lightbox.classList.remove("active");
   });
 }
 
 function initScrollHint(options = {}) {
-  const {
-    selector = ".scroll-hint",
-    hideAfterScroll = 100
-  } = options;
+  const { selector = ".scroll-hint", hideAfterScroll = 100 } = options;
 
   const hint = document.querySelector(selector);
   if (!hint) return;
@@ -239,22 +240,21 @@ function initScrollHint(options = {}) {
 
   hint.addEventListener("click", () => {
     window.scrollTo({
-      top: window.innerHeight*0.96,
-      behavior: "smooth"
+      top: window.innerHeight * 0.96,
+      behavior: "smooth",
     });
   });
 }
 
 function initSessionTracking() {
-
   if (window.location.pathname.startsWith("/admin")) return;
 
   let sessionId = localStorage.getItem("sessionId");
 
   if (!sessionId) {
     fetch("/api/session/start", { method: "POST" })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         sessionId = data.sessionId;
         localStorage.setItem("sessionId", sessionId);
       });
@@ -266,9 +266,9 @@ function initSessionTracking() {
     fetch("/api/session/ping", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ sessionId })
+      body: JSON.stringify({ sessionId }),
     });
   }, 10000);
 
@@ -276,13 +276,25 @@ function initSessionTracking() {
     if (document.visibilityState === "hidden") {
       if (!sessionId) return;
 
-      navigator.sendBeacon(
-        "/api/session/end",
-        JSON.stringify({ sessionId })
-      );
+      navigator.sendBeacon("/api/session/end", JSON.stringify({ sessionId }));
 
       localStorage.removeItem("sessionId");
     }
+  });
+}
+
+function scrollFix() {
+  document.querySelectorAll('a[href^="/#"]').forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const isLocal = window.location.origin.includes("localhost");
+
+      if (!isLocal) {
+        e.preventDefault();
+
+        const url = new URL(link.href);
+        window.location.href = url.pathname + url.hash; // reload
+      }
+    });
   });
 }
 
@@ -295,10 +307,11 @@ function initApp() {
   initScrollHint({
     hideAfterScroll: 50,
     showDelay: 1000,
-    selector: ".scroll-hint"
+    selector: ".scroll-hint",
   });
   /* initNewsletterModal(); */
   initSessionTracking();
+  scrollFix();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

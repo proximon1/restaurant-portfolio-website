@@ -524,7 +524,7 @@ function initApp() {
     initItemModal();
     initVisitorsChart();
     renderTopPages();
-    initTextareaCounter("[name='description']", 800);
+    initTextareaCounter("[name='description']", 1000);
     initFileClearButtons();
     initToast();
     initFormValidation('.js-validate-form');

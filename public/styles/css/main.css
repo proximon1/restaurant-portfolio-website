@@ -87,6 +87,8 @@ section.contacts {
 img {
   display: block;
   max-width: 100%;
+  border: none;
+  outline: none;
 }
 
 /* LAYOUT */
@@ -538,11 +540,13 @@ section.projects {
   font-size: 15px;
 }
 
-
 .footer-logo-wrapper {
   position: relative;
+  isolation: isolate;
   display: inline-block;
+  background: var(--color-burgundy);
 }
+
 
 .logo-hover {
   position: absolute;
@@ -691,7 +695,7 @@ footer li:hover .footer-menu-item {
 
   text-transform: uppercase;
   font-weight: 800;
-  font-size: clamp(16px, 9cqw, 24px);
+  font-size: clamp(14px, 2vw, 20px);
   letter-spacing: 0.03em;
   color: var(--color-beige);
 
