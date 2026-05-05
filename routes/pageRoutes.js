@@ -9,6 +9,7 @@ import { requireAuth } from "../middlewares/auth.js";
 import { adminLayout } from "../middlewares/adminLayout.js";
 import { uploadProjectItem, uploadLanding } from "../middlewares/upload.js";
 import { desktopOnly } from '../middlewares/desktopOnly.js';
+import { convertImages } from "../middlewares/convertImage.js";
 
 const router = express.Router();
 router.use("/admin", desktopOnly); 
@@ -27,10 +28,10 @@ router.get("/admin/project-items/delete/:id", deleteProjectItem);
 router.get("/admin/tags/delete/:id", requireAuth, deleteTag);
 router.post("/admin/projects", requireAuth, createProject);
 router.post("/admin/projects/:slug", updateProject);
-router.post("/admin/project-items/:slug", uploadProjectItem, createProjectItem);
-router.post("/admin/project-items/:slug/:id", uploadProjectItem, updateProjectItem);
+router.post("/admin/project-items/:slug", uploadProjectItem, convertImages, createProjectItem);
+router.post("/admin/project-items/:slug/:id", uploadProjectItem, convertImages, updateProjectItem);
 router.post("/admin/login", loginAdmin);
-router.post("/admin/landing", requireAuth, uploadLanding, updateLanding);
+router.post("/admin/landing", requireAuth, uploadLanding, convertImages, updateLanding);
 router.post("/api/session/start", startSessionController);
 router.post("/api/session/end", endSessionController);
 

@@ -379,10 +379,36 @@ function initImagePreview() {
 
   if (!input || !img) return;
 
-  input.addEventListener("change", () => {
-    const file = input.files[0];
-
+  input.addEventListener("change", async () => {
+    let file = input.files[0];
     if (!file) return;
+
+    if (
+      (file.type === "image/heic" ||
+      file.name.toLowerCase().endsWith(".heic")) &&
+      typeof heic2any !== "undefined"
+    ) {
+      try {
+        const blob = await heic2any({
+          blob: file,
+          toType: "image/jpeg",
+          quality: 0.9
+        });
+
+        file = new File(
+          [blob],
+          file.name.replace(/\.heic$/i, ".jpg"),
+          { type: "image/jpeg" }
+        );
+
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+
+      } catch (err) {
+        console.error("HEIC convert error:", err);
+      }
+    }
 
     const previewUrl = URL.createObjectURL(file);
     img.src = previewUrl;
