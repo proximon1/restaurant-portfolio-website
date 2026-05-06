@@ -532,6 +532,56 @@ section.projects {
   cursor: pointer;
 }
 
+.project-navigation {
+  min-height: 180px;
+}
+
+.project-nav-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.project-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  white-space: nowrap;
+
+  text-decoration: none;
+  color: var(--color-black);
+
+  transition: opacity 0.25s ease,
+              transform 0.25s ease;
+}
+
+.project-nav-link:hover {
+  opacity: 0.7;
+  transform: translateY(-2px);
+}
+
+.project-nav-link small {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-nav-link strong {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.nav-arrow {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.next-project {
+  margin-left: auto;
+  text-align: right;
+}
+
 .footnote {
   width: 200px;
 }
@@ -1059,6 +1109,14 @@ footer li:hover .footer-menu-item {
     display: none;
   }
 
+  .project-nav-link strong {
+    display: none;
+  }
+
+  .project-nav-link small {
+    max-width: 80px;
+    white-space: normal;
+  }
 }
 
 /* SMALL MOBIL */
