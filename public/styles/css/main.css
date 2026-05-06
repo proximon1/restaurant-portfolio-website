@@ -1109,7 +1109,8 @@ footer li:hover .footer-menu-item {
     display: none;
   }
 
-  .project-nav-link strong {
+  .project-nav-link strong,
+  .nav-arrow {
     display: none;
   }
 
