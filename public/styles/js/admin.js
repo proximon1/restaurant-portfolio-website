@@ -272,6 +272,19 @@ function initFormValidation(formSelector) {
   });
 }
 
+function preventSubmitWhileConverting() {
+  const forms = document.querySelectorAll("form");
+
+  forms.forEach(form => {
+    form.addEventListener("submit", (e) => {
+      if (isConverting) {
+        e.preventDefault();
+        console.log("Blocked submit: still converting");
+      }
+    });
+  });
+}
+
 function initDeleteItems() {
   const modal = document.getElementById("deleteModal");
   const confirmBtn = document.getElementById("confirmDelete");
@@ -390,6 +403,9 @@ function initImagePreview() {
       file.name.toLowerCase().endsWith(".heic")) &&
       typeof heic2any !== "undefined"
     ) {
+      isConverting = true;
+      setModalSubmitDisabled(true);
+
       try {
         const blob = await heic2any({
           blob: file,
@@ -410,6 +426,9 @@ function initImagePreview() {
       } catch (err) {
         console.error("HEIC convert error:", err);
       }
+
+      isConverting = false;
+      setModalSubmitDisabled(false);
     }
 
     const previewUrl = URL.createObjectURL(file);
@@ -417,19 +436,26 @@ function initImagePreview() {
   });
 }
 
-function setSubmitDisabled(state) {
-  const btn = document.querySelector("[data-submit]");
+function setModalSubmitDisabled(state) {
+  const form = document.getElementById("itemForm");
+  if (!form) return;
+
+  const btn = form.querySelector("[data-submit]");
   if (!btn) return;
 
   btn.disabled = state;
+  btn.innerText = state ? "Processing..." : "Save";
+}
 
-  if (state) {
-    btn.innerText = "Processing...";
-    btn.style.pointerEvents = "none";
-  } else {
-    btn.innerText = "Save changes";
-    btn.style.pointerEvents = "";
-  }
+function setLandingSubmitDisabled(state) {
+  const form = document.querySelector("form[action='/admin/landing']");
+  if (!form) return;
+
+  const btn = form.querySelector("[data-submit]");
+  if (!btn) return;
+
+  btn.disabled = state;
+  btn.innerText = state ? "Processing..." : "Save changes";
 }
 
 function initLandingImageInputs() {
@@ -449,7 +475,7 @@ function initLandingImageInputs() {
         typeof heic2any !== "undefined"
       ) {
         isConverting = true;
-        setSubmitDisabled(true);
+        setLandingSubmitDisabled(true);
 
         try {
           const blob = await heic2any({
@@ -473,7 +499,7 @@ function initLandingImageInputs() {
         }
 
         isConverting = false;
-        setSubmitDisabled(false);
+        setLandingSubmitDisabled(false);
       }
     });
   });
@@ -625,6 +651,7 @@ function initApp() {
     initNewTagInput();
     initMainCheckboxBehavior();
     initLandingImageInputs();
+    preventSubmitWhileConverting();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
