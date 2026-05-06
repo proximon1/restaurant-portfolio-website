@@ -609,3 +609,7 @@ export const endSessionController = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export async function pingSessionController(req, res) {
+  return res.sendStatus(200);
+}

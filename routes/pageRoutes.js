@@ -4,7 +4,7 @@ import { renderContact } from "../controllers/contactController.js";
 import { renderPrivacy } from "../controllers/privacyController.js";
 import { renderExampleproject } from "../controllers/exampleprojectController.js";
 import { renderProject } from "../controllers/projectController.js";
-import { startSessionController, endSessionController, deleteTag, deleteProjectItem, updateProjectItem, createProjectItem, deleteProject, updateProject, loginAdmin, renderLogin, renderAdminDashboard, logoutAdmin, renderAdminProjects, renderAdminStatistics, renderAdminLanding , renderAdminProjectDetail, updateLanding, renderAdminProjectCreate, createProject} from "../controllers/adminController.js";
+import { pingSessionController, startSessionController, endSessionController, deleteTag, deleteProjectItem, updateProjectItem, createProjectItem, deleteProject, updateProject, loginAdmin, renderLogin, renderAdminDashboard, logoutAdmin, renderAdminProjects, renderAdminStatistics, renderAdminLanding , renderAdminProjectDetail, updateLanding, renderAdminProjectCreate, createProject} from "../controllers/adminController.js";
 import { requireAuth } from "../middlewares/auth.js";
 import { adminLayout } from "../middlewares/adminLayout.js";
 import { uploadProjectItem, uploadLanding } from "../middlewares/upload.js";
@@ -34,6 +34,7 @@ router.post("/admin/login", loginAdmin);
 router.post("/admin/landing", requireAuth, uploadLanding, convertImages, updateLanding);
 router.post("/api/session/start", startSessionController);
 router.post("/api/session/end", endSessionController);
+router.post("/api/session/ping", pingSessionController);
 
 router.get("/", renderMain);
 router.get("/contact", renderContact);
