@@ -415,6 +415,46 @@ function initImagePreview() {
   });
 }
 
+function initHeicConversionForAllInputs() {
+  const inputs = document.querySelectorAll("input[type='file'][accept*='image']");
+
+  inputs.forEach(input => {
+    input.addEventListener("change", async () => {
+      let file = input.files[0];
+      if (!file) return;
+
+      if (
+        (file.type === "image/heic" ||
+        file.name.toLowerCase().endsWith(".heic")) &&
+        typeof heic2any !== "undefined"
+      ) {
+        try {
+          const blob = await heic2any({
+            blob: file,
+            toType: "image/jpeg",
+            quality: 0.9
+          });
+
+          const newFile = new File(
+            [blob],
+            file.name.replace(/\.heic$/i, ".jpg"),
+            { type: "image/jpeg" }
+          );
+
+          const dt = new DataTransfer();
+          dt.items.add(newFile);
+          input.files = dt.files;
+
+          console.log("HEIC → JPG converted:", newFile.name);
+
+        } catch (err) {
+          console.error("HEIC convert error:", err);
+        }
+      }
+    });
+  });
+}
+
 function OpenCreateModal() {
   const modal = document.getElementById("itemModal");
   const form = document.getElementById("itemForm");
@@ -560,6 +600,7 @@ function initApp() {
     initEditProjectItem();
     initNewTagInput();
     initMainCheckboxBehavior();
+    initHeicConversionForAllInputs();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
