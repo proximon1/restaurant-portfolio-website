@@ -1,3 +1,5 @@
+let isConverting = false;
+
 function initDropdownToggle() {
     const user = document.querySelector(".admin-user");
 
@@ -415,22 +417,40 @@ function initImagePreview() {
   });
 }
 
-function initHeicConversionForAllInputs() {
-  const inputs = document.querySelectorAll("input[type='file']");
+function setSubmitDisabled(state) {
+  const btn = document.querySelector("[data-submit]");
+  if (!btn) return;
+
+  btn.disabled = state;
+
+  if (state) {
+    btn.innerText = "Processing...";
+    btn.style.pointerEvents = "none";
+  } else {
+    btn.innerText = "Save changes";
+    btn.style.pointerEvents = "";
+  }
+}
+
+function initLandingImageInputs() {
+  const inputs = document.querySelectorAll(`
+    input[name="aboutImageSmall"],
+    input[name="aboutImageLarge"]
+  `);
 
   inputs.forEach(input => {
     input.addEventListener("change", async () => {
       let file = input.files[0];
       if (!file) return;
 
-      // csak image-ekre
-      if (!file.type.startsWith("image")) return;
-
       if (
         (file.type === "image/heic" ||
         file.name.toLowerCase().endsWith(".heic")) &&
         typeof heic2any !== "undefined"
       ) {
+        isConverting = true;
+        setSubmitDisabled(true);
+
         try {
           const blob = await heic2any({
             blob: file,
@@ -448,11 +468,12 @@ function initHeicConversionForAllInputs() {
           dt.items.add(newFile);
           input.files = dt.files;
 
-          console.log("HEIC → JPG converted:", newFile.name);
-
         } catch (err) {
           console.error("HEIC convert error:", err);
         }
+
+        isConverting = false;
+        setSubmitDisabled(false);
       }
     });
   });
@@ -603,7 +624,7 @@ function initApp() {
     initEditProjectItem();
     initNewTagInput();
     initMainCheckboxBehavior();
-    initHeicConversionForAllInputs();
+    initLandingImageInputs();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
