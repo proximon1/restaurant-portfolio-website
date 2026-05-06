@@ -236,7 +236,7 @@ function initFormValidation(formSelector) {
         if (!value) {
           valid = false;
         }
-        if (input.name === "note_order") {
+        if (input.name === "note_order" && !document.getElementById("modalMain")?.checked) {
           const num = parseInt(input.value, 10);
 
           if (isNaN(num) || num < 1) {
@@ -425,6 +425,9 @@ function initImagePreview() {
 
       } catch (err) {
         console.error("HEIC convert error:", err);
+        alert(
+          "This HEIC image could not be processed.\n\nSome HEIC files use unsupported formats (HDR, Live Photo, or advanced iPhone encoding).\n\nPlease convert the image to JPG or choose a different file."
+        );
       }
 
       isConverting = false;
@@ -612,17 +615,22 @@ function initMainCheckboxBehavior() {
   function updateState() {
     if (mainCheckbox.checked) {
       orderInput.value = 0;
-      orderInput.disabled = true;
+      orderInput.readOnly = true;
 
-      layoutInput.disabled = true;
-      descInput.disabled = true;
+      layoutInput.style.pointerEvents = "none";
+      layoutInput.style.opacity = "0.5";
+
+      descInput.readOnly = true;
 
       layoutInput.value = "square";
 
     } else {
-      orderInput.disabled = false;
-      layoutInput.disabled = false;
-      descInput.disabled = false;
+      orderInput.readOnly = false;
+
+      layoutInput.style.pointerEvents = "";
+      layoutInput.style.opacity = "";
+
+      descInput.readOnly = false;
 
       if (orderInput.value === "0") {
         orderInput.value = "";
