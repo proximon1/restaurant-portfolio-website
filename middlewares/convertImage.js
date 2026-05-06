@@ -26,18 +26,11 @@ export async function convertImages(req, res, next) {
 async function convert(filePath) {
   const ext = path.extname(filePath).toLowerCase();
 
-  if (ext !== ".heic" && ext !== ".heif") {
+  if (ext === ".heic" || ext === ".heif") {
+    console.log("HEIC detected → keeping original (frontend should convert)");
+
     return filePath;
   }
 
-  const newPath = filePath.replace(/\.(heic|heif)$/i, ".jpg");
-
-   await sharp(filePath)
-    .rotate()
-    .jpeg({ quality: 85 })
-    .toFile(newPath);
-
-  fs.unlinkSync(filePath);
-
-  return newPath;
+  return filePath;
 }

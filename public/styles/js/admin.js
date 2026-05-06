@@ -416,12 +416,15 @@ function initImagePreview() {
 }
 
 function initHeicConversionForAllInputs() {
-  const inputs = document.querySelectorAll("input[type='file'][accept*='image']");
+  const inputs = document.querySelectorAll("input[type='file']");
 
   inputs.forEach(input => {
     input.addEventListener("change", async () => {
       let file = input.files[0];
       if (!file) return;
+
+      // csak image-ekre
+      if (!file.type.startsWith("image")) return;
 
       if (
         (file.type === "image/heic" ||
