@@ -309,7 +309,7 @@ function initApp() {
     showDelay: 1000,
     selector: ".scroll-hint",
   });
-  /* initNewsletterModal(); */
+  initNewsletterModal();
   initSessionTracking();
   scrollFix();
 }

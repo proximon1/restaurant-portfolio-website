@@ -309,6 +309,7 @@ section.projects {
 
 .newsletter-modal {
   position: relative;
+  background: var(--color-beige);
 
   width: min(700px, 90vw);
   aspect-ratio: 700 / 550;
@@ -461,8 +462,8 @@ section.projects {
 }
 
 .lightbox img {
-  width: 70vw;
-  height: 70vh;
+  width: 90vw;
+  height: 90vh;
   object-fit: contain;
 
   transform: scale(0.95);
@@ -503,7 +504,7 @@ section.projects {
 .project-gallery-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: left;
   display: block;
 }
@@ -978,6 +979,15 @@ footer li:hover .footer-menu-item {
 
   .project-type-list li:hover::after {
     width: 100%;
+  }
+
+  .project-main-picture {
+    aspect-ratio: 4 / 3;
+    max-height: 80vh;
+    margin-left: -10px;
+    background-size: cover;      
+    background-position: center;
+    background-repeat: no-repeat;
   }
 }
 
