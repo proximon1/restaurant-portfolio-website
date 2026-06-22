@@ -602,6 +602,15 @@ section.projects {
   background: var(--color-burgundy);
 }
 
+.footer-phone {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-phone:hover {
+  text-decoration: underline;
+}
+
 
 .logo-hover {
   position: absolute;
