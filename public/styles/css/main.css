@@ -311,15 +311,15 @@ section.projects {
   position: relative;
   background: var(--color-beige);
 
-  width: min(700px, 90vw);
+  width: clamp(320px, 75vw, 700px);
   aspect-ratio: 700 / 550;
 
-  transform: rotate(-6deg);
+  padding: clamp(1.5rem, 5vw, 5rem);
 
-  padding: clamp(1.5rem, 4vw, 5rem);
-
-  text-align: center;
   border-radius: 5px;
+  text-align: center;
+
+  transform: rotate(-6deg);
 }
 
 .newsletter-modal > * {
@@ -371,6 +371,10 @@ section.projects {
   color: var(--color-beige);
   background: var(--color-burgundy);
   border: none;
+}
+
+.mobile-break {
+  display: none;
 }
 
 .services-title {
@@ -1127,6 +1131,10 @@ footer li:hover .footer-menu-item {
   .project-nav-link small {
     max-width: 80px;
     white-space: normal;
+  }
+
+  .mobile-break {
+    display: block;
   }
 }
 
