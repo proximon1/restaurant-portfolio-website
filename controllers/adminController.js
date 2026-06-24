@@ -3,7 +3,7 @@ import db from "../db.js";
 import path from "path";
 import fs from "fs";
 
-import { getAvgTimeLast30Days, createSession, finishSession, getProjectItemById, normalizeProjectItemOrder, deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
+import { getProjectItemById, normalizeProjectItemOrder, deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
 import { getProjectBySlug } from "../models/projectModel.js";
 
 const generateSlug = (text) => {
@@ -573,43 +573,3 @@ export const deleteTag = async (req, res) => {
 
   res.redirect(`/admin/projects/${slug}`);
 };
-
-export const startSessionController = async (req, res) => {
-  try {
-    const sessionId = await createSession(req.ip);
-
-    console.log("Session started:", req.ip);
-
-    res.json({ sessionId });
-
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-};
-
-export const endSessionController = async (req, res) => {
-  try {
-    const body = typeof req.body === "string"
-      ? JSON.parse(req.body)
-      : req.body;
-
-    const sessionId = body?.sessionId;
-
-    if (!sessionId) return res.sendStatus(400);
-
-    await finishSession(sessionId);
-
-    console.log("Session finished:", req.ip);
-
-    res.sendStatus(200);
-
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-};
-
-export async function pingSessionController(req, res) {
-  return res.sendStatus(200);
-}
