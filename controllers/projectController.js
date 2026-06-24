@@ -21,18 +21,23 @@ export const renderProject = async (req, res) => {
 
   const projects = await getAllProjects();
 
-  const currentIndex = projects.findIndex(
+  const visibleProjects = projects.filter(
+    p => p.main_image_url
+  );
+
+  const currentIndex = visibleProjects.findIndex(
     p => p.slug === project.slug
   );
 
   const previousProject =
     currentIndex > 0
-      ? projects[currentIndex - 1]
+      ? visibleProjects[currentIndex - 1]
       : null;
 
   const nextProject =
-    currentIndex < projects.length - 1
-      ? projects[currentIndex + 1]
+    currentIndex >= 0 &&
+    currentIndex < visibleProjects.length - 1
+      ? visibleProjects[currentIndex + 1]
       : null;
 
   res.render("projects/project", {
