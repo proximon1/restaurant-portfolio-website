@@ -10,6 +10,7 @@ import { adminLayout } from "../middlewares/adminLayout.js";
 import { uploadProjectItem, uploadLanding } from "../middlewares/upload.js";
 import { desktopOnly } from '../middlewares/desktopOnly.js';
 import { convertImages } from "../middlewares/convertImage.js";
+import { pageView } from '../middlewares/pageView.js';
 
 const router = express.Router();
 router.use("/admin", desktopOnly); 
@@ -32,6 +33,8 @@ router.post("/admin/project-items/:slug", uploadProjectItem, convertImages, crea
 router.post("/admin/project-items/:slug/:id", uploadProjectItem, convertImages, updateProjectItem);
 router.post("/admin/login", loginAdmin);
 router.post("/admin/landing", requireAuth, uploadLanding, convertImages, updateLanding);
+
+router.use(pageView);
 
 router.get("/", renderMain);
 router.get("/contact", renderContact);

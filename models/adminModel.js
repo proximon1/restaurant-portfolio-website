@@ -349,3 +349,130 @@ export const getProjectItemById = async (id) => {
 
   return result.rows[0];
 };
+
+export const savePageView = async (path) => {
+  await db.query(`
+    INSERT INTO page_views (path)
+    VALUES ($1)
+  `, [path]);
+};
+
+export const getVisitorsLast30Days = async () => {
+  const result = await db.query(`
+    SELECT
+      DATE(created_at) AS day,
+      COUNT(*)::int AS visitors
+    FROM page_views
+    WHERE created_at >= NOW() - INTERVAL '30 days'
+    GROUP BY DATE(created_at)
+    ORDER BY day
+  `);
+
+  return result.rows;
+};
+
+export const getVisitorSummary = async () => {
+  const result = await db.query(`
+    SELECT
+      COUNT(*) FILTER (
+        WHERE created_at >= CURRENT_DATE
+      )::int AS today,
+
+      COUNT(*) FILTER (
+        WHERE created_at >= date_trunc('week', NOW())
+      )::int AS week,
+
+      COUNT(*) FILTER (
+        WHERE created_at >= date_trunc('month', NOW())
+      )::int AS month
+
+    FROM page_views
+  `);
+
+  return result.rows[0];
+};
+
+export const getTopPages = async () => {
+  const result = await db.query(`
+    SELECT
+      path,
+      COUNT(*)::int AS views
+    FROM page_views
+    GROUP BY path
+    ORDER BY views DESC
+    LIMIT 10
+  `);
+
+  return result.rows;
+};
+
+export const getMostViewedProjectMonth = async () => {
+  const result = await db.query(`
+    SELECT
+      path,
+      COUNT(*)::int AS views
+    FROM page_views
+    WHERE created_at >= date_trunc('month', NOW())
+    AND path LIKE '/projects/%'
+    GROUP BY path
+    ORDER BY views DESC
+    LIMIT 1
+  `);
+
+  return result.rows[0];
+};
+
+export const getMostViewedProjectWeek = async () => {
+  const result = await db.query(`
+    SELECT
+      path,
+      COUNT(*)::int AS views
+    FROM page_views
+    WHERE created_at >= date_trunc('week', NOW())
+    AND path LIKE '/projects/%'
+    GROUP BY path
+    ORDER BY views DESC
+    LIMIT 1
+  `);
+
+  return result.rows[0];
+};
+
+export const getLeastViewedProject = async () => {
+  const result = await db.query(`
+    SELECT
+      p.title,
+      p.slug,
+      COUNT(pv.id)::int AS views
+    FROM projects p
+    LEFT JOIN page_views pv
+      ON pv.path = '/projects/' || p.slug
+    GROUP BY p.id, p.title, p.slug
+    ORDER BY views ASC
+    LIMIT 1
+  `);
+
+  return result.rows[0];
+};
+
+export const getTrafficShare = async () => {
+  const result = await db.query(`
+    SELECT
+      COUNT(*) FILTER (
+        WHERE path LIKE '/projects/%'
+      )::int AS projects,
+
+      COUNT(*) FILTER (
+        WHERE path = '/'
+      )::int AS main,
+
+      COUNT(*) FILTER (
+        WHERE path != '/'
+        AND path NOT LIKE '/projects/%'
+      )::int AS other
+
+    FROM page_views
+  `);
+
+  return result.rows[0];
+};

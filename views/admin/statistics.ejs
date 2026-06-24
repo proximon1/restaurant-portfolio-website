@@ -1,28 +1,188 @@
 <div class="admin-container">
   <h1 class="mb-4">Statistics</h1>
 
-  <!-- TOP CARDS -->
-  <div class="statistics-cards mb-4">
-    <div class="admin-card">
-      <h3>Average time on the website daily (last 30 days)</h3>
-      <p style="font-size:24px; font-weight:700;">
-        <%= avgTime || '--' %>
-      </p>
+  <p class="statistics-page-description">
+    Monitor visitor activity, website performance and project engagement through real-time analytics. This dashboard provides insight into traffic trends, page popularity and the projects attracting the most attention over time.
+  </p>
+
+  <h2 class="statistics-section-title">
+    Website analytics
+  </h2>
+
+  <p class="statistics-section-description">
+    Understand how visitors interact with the website, from overall traffic trends to page performance and visitor behavior.
+  </p>
+
+  <div class="statistics-group">
+
+    <h3 class="statistics-group-title">
+      Recent activity
+    </h3>
+
+    <p class="statistics-group-description">
+      Monitor recent visitor activity and traffic trends across the website.
+    </p>
+
+    <div class="statistics-summary">
+
+      <div class="statistics-card">
+        <h4>Today</h4>
+        <p>Visits recorded since midnight.</p>
+        <strong><%= summary.today %></strong>
+      </div>
+
+      <div class="statistics-card">
+        <h4>This week</h4>
+        <p>Total visitors since Monday.</p>
+        <strong><%= summary.week %></strong>
+      </div>
+
+      <div class="statistics-card">
+        <h4>This month</h4>
+        <p>All visits recorded this month.</p>
+        <strong><%= summary.month %></strong>
+      </div>
+
+      <div class="statistics-card statistics-chart">
+        <h3>Visitors (last 30 days)</h3>
+        <p>Daily page visits across the website.</p>
+        <canvas id="visitorsChart"></canvas>
+      </div>
+
     </div>
+
   </div>
 
-  <!-- GRAPH -->
-  <div class="statistics-card mb-4">
-    <h3>Visitors (last 30 days)</h3>
-    <canvas id="visitorsChart"></canvas>
+  <div class="statistics-group">
+
+    <h3 class="statistics-group-title">
+      Overall website performance
+    </h3>
+
+    <p class="statistics-group-description">
+      Understand how visitors navigate the site and which pages receive the most attention.
+    </p>
+
+    <div class="statistics-summary">
+
+      <div class="statistics-card">
+        <h3>Traffic share</h3>
+        <p>How visitors navigate the website.</p>
+
+        <div class="statistics-row">
+          <span>Main page</span>
+          <strong><%= trafficPercentages.main %>%</strong>
+        </div>
+
+        <div class="statistics-row">
+          <span>Projects</span>
+          <strong><%= trafficPercentages.projects %>%</strong>
+        </div>
+
+        <div class="statistics-row">
+          <span>Other pages</span>
+          <strong><%= trafficPercentages.other %>%</strong>
+        </div>
+      </div>
+
+      <div class="statistics-card">
+        <h3>Other pages</h3>
+        <p>Visits to the homepage and supporting pages.</p>
+        <ul id="otherPagesList"></ul>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- TOP PAGES -->
-  <div class="statistics-card">
-    <h3>Top pages (overall)</h3>
-    <ul id="topPagesList"></ul>
+  <!-- PROJECTS -->
+
+  <h2 class="statistics-section-title">
+    Project analytics
+  </h2>
+
+  <p class="statistics-section-description">
+    Measure how individual projects perform and discover which work attracts the most attention over time.
+  </p>
+
+  <div class="statistics-group">
+
+    <h3 class="statistics-group-title">
+      Recent performance
+    </h3>
+
+    <p class="statistics-group-description">
+      Discover which projects are currently attracting the most interest.
+    </p>
+
+    <div class="statistics-summary">
+
+      <div class="statistics-card">
+        <h4>Top project (month)</h4>
+        <p>Most visited project this month.</p>
+        <strong>
+          <%= mostViewedMonth
+            ? mostViewedMonth.path
+                .replace("/projects/", "")
+                .replace(/-/g, " ")
+            : "--" %>
+        </strong>
+      </div>
+
+      <div class="statistics-card">
+        <h4>Top project (week)</h4>
+        <p>Most visited project this week.</p>
+        <strong>
+          <%= mostViewedWeek
+            ? mostViewedWeek.path
+                .replace("/projects/", "")
+                .replace(/-/g, " ")
+            : "--" %>
+        </strong>
+      </div>
+
+    </div>
+
   </div>
+
+  <div class="statistics-group">
+
+    <h3 class="statistics-group-title">
+      Overall project performance
+    </h3>
+
+    <p class="statistics-group-description">
+      Compare project popularity and identify your strongest and weakest performers.
+    </p>
+
+    <div class="statistics-summary">
+
+      <div class="statistics-card">
+        <h4>Least viewed project</h4>
+        <p>Project receiving the fewest visits.</p>
+        <strong>
+          <%= leastViewed
+            ? leastViewed.title
+            : "--" %>
+        </strong>
+      </div>
+
+      <div class="statistics-card">
+        <h3>Most viewed projects</h3>
+        <p>See which projects generate the most interest.</p>
+        <ul id="projectPagesList"></ul>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
+<script>
+  window.visitors = <%- JSON.stringify(visitors) %>;
+  window.topPages = <%- JSON.stringify(topPages) %>;
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/js/admin-stats.js"></script>
+<script src="/js/admin.js"></script>

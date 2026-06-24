@@ -3,7 +3,7 @@ import db from "../db.js";
 import path from "path";
 import fs from "fs";
 
-import { getProjectItemById, normalizeProjectItemOrder, deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
+import { getLeastViewedProject, getMostViewedProjectWeek, getMostViewedProjectMonth, getTrafficShare, getTopPages, getVisitorSummary, getVisitorsLast30Days, getProjectItemById, normalizeProjectItemOrder, deleteTagById, getLandingData, createTagIfNotExists, deleteProjectItemById, updateProjectItemById, insertProjectItem, deleteProjectWithItems, updateProjectBySlug, insertProject, getAdminByUsername, getProjectsWithItemCount, getProjectItemsByProjectId, updateLandingData, getAllTags, setProjectTags, getProjectTagIds } from "../models/adminModel.js";
 import { getProjectBySlug } from "../models/projectModel.js";
 
 const generateSlug = (text) => {
@@ -51,17 +51,44 @@ export const renderAdminLanding = async (req, res) => {
 
 export const renderAdminStatistics = async (req, res) => {
   try {
-    const avgSeconds = await getAvgTimeLast30Days();
+    const visitors = await getVisitorsLast30Days();
+    const summary = await getVisitorSummary();
+    const topPages = await getTopPages();
+    const mostViewedMonth = await getMostViewedProjectMonth();
+    const mostViewedWeek = await getMostViewedProjectWeek();
+    const leastViewed = await getLeastViewedProject();
+    const trafficShare = await getTrafficShare();
 
-    const min = Math.floor(avgSeconds / 60);
-    const sec = avgSeconds % 60;
+    const totalTraffic =
+      trafficShare.main +
+      trafficShare.projects +
+      trafficShare.other;
 
-    const formatted = `${min}m ${sec}s`;
+    const trafficPercentages = {
+      main: totalTraffic
+        ? Math.round((trafficShare.main / totalTraffic) * 100)
+        : 0,
+
+      projects: totalTraffic
+        ? Math.round((trafficShare.projects / totalTraffic) * 100)
+        : 0,
+
+      other: totalTraffic
+        ? Math.round((trafficShare.other / totalTraffic) * 100)
+        : 0
+    };
 
     res.render("admin/statistics.ejs", {
       currentPath: req.path,
       layout: "admin/layout",
-      avgTime: formatted
+      visitors,
+      summary,
+      topPages,
+      mostViewedMonth,
+      mostViewedWeek,
+      leastViewed,
+      trafficShare,
+      trafficPercentages
     });
 
   } catch (error) {
@@ -70,7 +97,22 @@ export const renderAdminStatistics = async (req, res) => {
     res.render("admin/statistics.ejs", {
       currentPath: req.path,
       layout: "admin/layout",
-      avgTime: "--"
+      visitors: [],
+      topPages: [],
+      summary: {
+        today: 0,
+        week: 0,
+        month: 0
+      },
+      mostViewedMonth: null,
+      mostViewedWeek: null,
+      leastViewed: null,
+      trafficShare: {
+        projects: 0,
+        main: 0,
+        other: 0
+      },
+      trafficPercentages
     });
   }
 };
@@ -573,3 +615,4 @@ export const deleteTag = async (req, res) => {
 
   res.redirect(`/admin/projects/${slug}`);
 };
+

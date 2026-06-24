@@ -73,57 +73,72 @@ function initItemModal() {
   });
 }
 
-function generateFakeData(days = 30) {
-  const labels = [];
-  const data = [];
-
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-
-    const label = date.toISOString().slice(5, 10);
-    labels.push(label);
-
-    data.push(Math.floor(Math.random() * 180) + 20);
-  }
-
-  return { labels, data };
-}
-
-function generateFakeTopPages() {
-  const pages = [
-    "/projects/pasta-and-pickles",
-    "/projects/natures-signatures",
-    "/projects/rat-experience",
-    "/projects/editorial-dinner",
-    "/projects/food-installation"
-  ];
-
-  return pages.map(page => ({
-    page,
-    views: Math.floor(Math.random() * 200) + 20
-  })).sort((a, b) => b.views - a.views);
-}
-
 function renderTopPages() {
-  const list = document.getElementById("topPagesList");
-  if (!list) return;
+  const projectList = document.getElementById("projectPagesList");
+  const otherList = document.getElementById("otherPagesList");
 
-  const pages = generateFakeTopPages();
+  if (!projectList || !otherList) return;
 
-  list.innerHTML = pages.map(p => `
-    <li>
-      <span>${p.page}</span>
-      <strong>${p.views} visitors</strong>
-    </li>
-  `).join("");
+  const projectPages = window.topPages.filter(p =>
+    p.path.startsWith("/projects/")
+  );
+
+  const otherPages = window.topPages.filter(p =>
+    !p.path.startsWith("/projects/")
+  );
+
+  projectList.innerHTML = projectPages.map(p => {
+    const name = p.path
+      .replace("/projects/", "")
+      .replace(/-\d+$/, "")
+      .replaceAll("-", " ")
+      .replace(/\b\w/g, c => c.toUpperCase());
+
+    return `
+      <li class="statistics-row">
+        <span class="statistics-name">${name}</span>
+        <span class="statistics-value">
+          ${p.views} visitors
+        </span>
+      </li>
+    `;
+  }).join("");
+
+  otherList.innerHTML = otherPages.map(p => {
+    let name = p.path;
+
+    if (p.path === "/") {
+      name = "Homepage";
+    } else {
+      name = p.path
+        .replace("/", "")
+        .replaceAll("-", " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    return `
+      <li class="statistics-row">
+        <span class="statistics-name">${name}</span>
+        <span class="statistics-value">
+          ${p.views} visitors
+        </span>
+      </li>
+    `;
+  }).join("");
 }
 
 function initVisitorsChart() {
   const ctx = document.getElementById("visitorsChart");
   if (!ctx) return;
 
-  const { labels, data } = generateFakeData(30);
+  const labels = window.visitors.map(v => {
+    return new Date(v.day).toLocaleDateString("hu-HU", {
+      month: "2-digit",
+      day: "2-digit"
+    });
+  });
+
+  const data = window.visitors.map(v => v.visitors);
 
   new Chart(ctx, {
     type: "line",
@@ -138,11 +153,19 @@ function initVisitorsChart() {
     options: {
       responsive: true,
       plugins: {
-        legend: { display: false }
+        legend: {
+          display: false
+        }
       },
       scales: {
-        x: { grid: { display: false } },
-        y: { beginAtZero: true }
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: true
+        }
       }
     }
   });

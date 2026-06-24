@@ -56,6 +56,11 @@ body {
   );
 }
 
+.admin-container h2 {
+  font-family: "Archivo", sans-serif;
+  font-size: 26px;
+}
+
 /* ========================
    SIDEBAR
 ======================== */
@@ -273,7 +278,7 @@ body {
 }
 
 .project-card label {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: #555;
 }
@@ -319,7 +324,7 @@ body {
 
 .admin-table th {
   text-align: left;
-  font-size: 13px;
+  font-size: 15px;
   color: #666;
   font-weight: 600;
   padding: 12px;
@@ -517,7 +522,7 @@ select:focus {
 
 label {
   margin-bottom: 4px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: #555;
 }
@@ -600,13 +605,144 @@ label {
   background: #fff;
   padding: 36px;
   border-radius: 14px;
+  margin: 1em 0px;
 
   border: 1px solid #eee;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
 }
 
+.statistics-card p {
+  color: var(--color-black);
+  font-family: "Archivo", sans-serif;
+  font-size: 15px;
+}
+
+.statistics-card strong {
+  color: var(--color-burgundy);
+  font-family: "Archivo", sans-serif;
+  font-size: 26px;
+}
+
 .statistics-card canvas {
   height: 300px;
+}
+
+.statistics-page-description {
+  font-family: "Archivo", sans-serif;
+  max-width: 800px;
+
+  margin-bottom: 40px;
+
+  color: #666;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.statistics-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.statistics-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+}
+
+.statistics-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 16px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.statistics-row:last-child {
+  border-bottom: none;
+}
+
+.statistics-name {
+  font-size: 15px;
+  color: var(--color-black);
+}
+
+.statistics-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-burgundy);
+}
+
+.statistics-card h3 {
+  font-family: "Archivo", sans-serif;
+  margin: 0;
+}
+
+.statistics-card h4 {
+  font-family: "Archivo", sans-serif;
+  margin: 0 0 10px;
+}
+
+.statistics-chart {
+  grid-column: span 2;
+}
+
+.statistics-section-title {
+  font-family: "Archivo", sans-serif;
+  margin: 40px 0 20px;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.statistics-section-description {
+  font-family: "Archivo", sans-serif;
+  margin: -10px 0 30px;
+
+  max-width: 700px;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  color: #666;
+}
+
+.statistics-group {
+  background: white;
+
+  padding: 30px;
+  margin-bottom: 30px;
+
+  border-radius: 14px;
+  border: 1px solid #eee;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.statistics-group-title {
+  font-family: "Archivo", sans-serif;
+  margin: 0 0 24px;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.statistics-group-description {
+  font-family: "Archivo", sans-serif;
+  margin: -12px 0 24px;
+
+  color: #666;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  max-width: 650px;
+}
+
+.statistics-group .statistics-card {
+  margin: 0;
 }
 
 #topPagesList {
